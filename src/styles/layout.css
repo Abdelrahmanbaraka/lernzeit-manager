@@ -1,0 +1,235 @@
+.app-layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #0f172a;
+  color: white;
+  padding: 2rem 1rem;
+}
+
+.sidebar-top {
+  margin-bottom: 3rem;
+}
+
+.sidebar-top h2 {
+  text-align: center;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  color: white;
+
+  padding: 1rem;
+
+  border-radius: 10px;
+
+  transition: 0.3s;
+}
+
+.nav-item:hover {
+  background-color: rgba(255,255,255,0.1);
+}
+
+.nav-item.active {
+  background-color: var(--primary-color);
+}
+
+.main-content {
+  flex: 1;
+  padding: 2rem;
+}
+
+.dashboard-header {
+  margin-bottom: 2rem;
+}
+
+.dashboard-header p {
+  margin-top: 0.5rem;
+  color: gray;
+}
+
+.dashboard-grid {
+  display: grid;
+
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+
+  gap: 1.5rem;
+
+  margin-bottom: 3rem;
+}
+
+.dashboard-card {
+  background-color: white;
+
+  padding: 2rem;
+
+  border-radius: 12px;
+
+  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+}
+
+.card-value {
+  margin-top: 1rem;
+
+  font-size: 2rem;
+
+  font-weight: bold;
+
+  color: var(--primary-color);
+}
+
+.dashboard-section {
+  background-color: white;
+
+  padding: 2rem;
+
+  border-radius: 12px;
+}
+
+.quick-actions {
+  display: flex;
+
+  gap: 1rem;
+
+  margin-top: 1rem;
+}
+
+.quick-actions button,
+.primary-btn,
+.logout-btn,
+.delete-btn,
+.login-form button {
+  border: none;
+
+  padding: 0.9rem 1.2rem;
+
+  border-radius: 10px;
+
+  font-size: 1rem;
+}
+
+.primary-btn,
+.quick-actions button,
+.login-form button {
+  background-color: var(--primary-color);
+
+  color: white;
+}
+
+.delete-btn {
+  background-color: var(--danger-color);
+
+  color: white;
+}
+
+.logout-btn {
+  background-color: #334155;
+
+  color: white;
+}
+
+.page-header {
+  display: flex;
+
+  justify-content: space-between;
+
+  align-items: center;
+
+  margin-bottom: 2rem;
+}
+
+.empty-state,
+.planning-placeholder,
+.progress-placeholder {
+  background-color: white;
+
+  padding: 3rem;
+
+  border-radius: 12px;
+
+  text-align: center;
+}
+
+.login-page {
+  min-height: 100vh;
+
+  display: flex;
+
+  justify-content: center;
+
+  align-items: center;
+
+  background-color: #e2e8f0;
+}
+
+.login-box {
+  background-color: white;
+
+  width: 400px;
+
+  padding: 3rem;
+
+  border-radius: 14px;
+
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.login-box h1 {
+  margin-bottom: 1rem;
+
+  text-align: center;
+}
+
+.login-box p {
+  margin-bottom: 2rem;
+
+  text-align: center;
+
+  color: gray;
+}
+
+.login-form {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 1rem;
+}
+
+.login-form input {
+  padding: 1rem;
+
+  border: 1px solid #ccc;
+
+  border-radius: 10px;
+
+  font-size: 1rem;
+}
+
+.login-box small {
+  display: block;
+
+  margin-top: 1rem;
+
+  color: gray;
+
+  text-align: center;
+}
+
+.profile-actions {
+  display: flex;
+
+  gap: 1rem;
+}
