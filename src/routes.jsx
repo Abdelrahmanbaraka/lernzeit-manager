@@ -1,40 +1,81 @@
 import { createBrowserRouter } from "react-router-dom";
 
 import LoginPage from "./pages/LoginPage";
+
 import DashboardPage from "./pages/DashboardPage";
+
 import GoalsPage from "./pages/GoalsPage";
+
 import PlanningPage from "./pages/PlanningPage";
+
 import ProgressPage from "./pages/ProgressPage";
+
 import ProfilePage from "./pages/ProfilePage";
+
 import NotFoundPage from "./pages/NotFoundPage";
+
+import ProtectedRoute from "./components/layout/ProtectedRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
+
     element: <LoginPage />,
   },
+
   {
     path: "/dashboard",
-    element: <DashboardPage />,
+
+    element: (
+      <ProtectedRoute>
+        <DashboardPage />
+      </ProtectedRoute>
+    ),
   },
+
   {
     path: "/goals",
-    element: <GoalsPage />,
+
+    element: (
+      <ProtectedRoute>
+        <GoalsPage />
+      </ProtectedRoute>
+    ),
   },
+
   {
     path: "/planning",
-    element: <PlanningPage />,
+
+    element: (
+      <ProtectedRoute>
+        <PlanningPage />
+      </ProtectedRoute>
+    ),
   },
+
   {
     path: "/progress",
-    element: <ProgressPage />,
+
+    element: (
+      <ProtectedRoute>
+        <ProgressPage />
+      </ProtectedRoute>
+    ),
   },
+
   {
     path: "/profile",
-    element: <ProfilePage />,
+
+    element: (
+      <ProtectedRoute>
+        <ProfilePage />
+      </ProtectedRoute>
+    ),
   },
+
   {
     path: "*",
+
     element: <NotFoundPage />,
   },
 ]);

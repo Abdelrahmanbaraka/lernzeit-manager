@@ -1,14 +1,21 @@
 import MainLayout from "../components/layout/MainLayout";
 
+import { getCurrentUser } from "../services/authService";
+
 function DashboardPage() {
+  const user = getCurrentUser();
+
   return (
     <MainLayout>
       <div className="page-container">
         <div className="dashboard-header">
-          <h1>Dashboard</h1>
+          <h1>
+            Willkommen, {user.username}
+          </h1>
 
           <p>
-            Willkommen zurück! Verfolge deine Lernzeiten und Ziele.
+            Verfolge deine Lernzeiten und
+            Ziele.
           </p>
         </div>
 
@@ -16,25 +23,33 @@ function DashboardPage() {
           <div className="dashboard-card">
             <h3>Heutige Lernzeit</h3>
 
-            <p className="card-value">02:15 h</p>
+            <p className="card-value">
+              02:15 h
+            </p>
           </div>
 
           <div className="dashboard-card">
             <h3>Aktive Ziele</h3>
 
-            <p className="card-value">5</p>
+            <p className="card-value">
+              5
+            </p>
           </div>
 
           <div className="dashboard-card">
             <h3>Geplante Stunden</h3>
 
-            <p className="card-value">32 h</p>
+            <p className="card-value">
+              32 h
+            </p>
           </div>
 
           <div className="dashboard-card">
             <h3>Erledigte Ziele</h3>
 
-            <p className="card-value">12</p>
+            <p className="card-value">
+              12
+            </p>
           </div>
         </div>
 
@@ -42,11 +57,15 @@ function DashboardPage() {
           <h2>Schnellzugriff</h2>
 
           <div className="quick-actions">
-            <button>Neue Lernsession</button>
+            <button>
+              Neue Lernsession
+            </button>
 
             <button>Neues Ziel</button>
 
-            <button>Planung öffnen</button>
+            <button>
+              Planung öffnen
+            </button>
           </div>
         </div>
       </div>
