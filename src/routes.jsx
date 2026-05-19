@@ -8,6 +8,8 @@ import GoalsPage from "./pages/GoalsPage";
 
 import PlanningPage from "./pages/PlanningPage";
 
+import LearningTimePage from "./pages/LearningTimePage";
+
 import ProgressPage from "./pages/ProgressPage";
 
 import ProfilePage from "./pages/ProfilePage";
@@ -49,6 +51,16 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <PlanningPage />
+      </ProtectedRoute>
+    ),
+  },
+
+  {
+    path: "/learning-time",
+
+    element: (
+      <ProtectedRoute>
+        <LearningTimePage />
       </ProtectedRoute>
     ),
   },

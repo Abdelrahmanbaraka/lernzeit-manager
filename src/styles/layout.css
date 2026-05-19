@@ -1,12 +1,50 @@
+:root {
+  --primary-color: #2563eb;
+
+  --danger-color: #dc2626;
+
+  --background-color: #f1f5f9;
+
+  --text-color: #0f172a;
+}
+
+* {
+  margin: 0;
+
+  padding: 0;
+
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+
+  background-color: var(--background-color);
+
+  color: var(--text-color);
+}
+
+a {
+  text-decoration: none;
+}
+
+button {
+  cursor: pointer;
+}
+
 .app-layout {
   display: flex;
+
   min-height: 100vh;
 }
 
 .sidebar {
   width: 250px;
+
   background-color: #0f172a;
+
   color: white;
+
   padding: 2rem 1rem;
 }
 
@@ -20,13 +58,17 @@
 
 .sidebar-nav {
   display: flex;
+
   flex-direction: column;
+
   gap: 1rem;
 }
 
 .nav-item {
   display: flex;
+
   align-items: center;
+
   gap: 1rem;
 
   color: white;
@@ -39,7 +81,7 @@
 }
 
 .nav-item:hover {
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .nav-item.active {
@@ -48,6 +90,7 @@
 
 .main-content {
   flex: 1;
+
   padding: 2rem;
 }
 
@@ -57,13 +100,17 @@
 
 .dashboard-header p {
   margin-top: 0.5rem;
+
   color: gray;
 }
 
 .dashboard-grid {
   display: grid;
 
-  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  grid-template-columns: repeat(
+    auto-fit,
+    minmax(220px, 1fr)
+  );
 
   gap: 1.5rem;
 
@@ -77,7 +124,8 @@
 
   border-radius: 12px;
 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px
+    rgba(0, 0, 0, 0.05);
 }
 
 .card-value {
@@ -110,7 +158,9 @@
 .primary-btn,
 .logout-btn,
 .delete-btn,
-.login-form button {
+.login-form button,
+.modal-actions button,
+.icon-btn {
   border: none;
 
   padding: 0.9rem 1.2rem;
@@ -118,11 +168,14 @@
   border-radius: 10px;
 
   font-size: 1rem;
+
+  cursor: pointer;
 }
 
 .primary-btn,
 .quick-actions button,
-.login-form button {
+.login-form button,
+.modal-actions button {
   background-color: var(--primary-color);
 
   color: white;
@@ -138,6 +191,10 @@
   background-color: #334155;
 
   color: white;
+}
+
+.page-container {
+  width: 100%;
 }
 
 .page-header {
@@ -183,7 +240,8 @@
 
   border-radius: 14px;
 
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 10px
+    rgba(0, 0, 0, 0.1);
 }
 
 .login-box h1 {
@@ -255,7 +313,8 @@
 
   align-items: center;
 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px
+    rgba(0, 0, 0, 0.05);
 }
 
 .goal-left {
@@ -289,11 +348,9 @@
 }
 
 .icon-btn {
-  border: none;
-
   background: transparent;
 
-  font-size: 1.1rem;
+  padding: 0.5rem;
 }
 
 .delete-icon {
@@ -304,18 +361,22 @@
   position: fixed;
 
   top: 0;
+
   left: 0;
 
   width: 100%;
+
   height: 100%;
 
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 
   display: flex;
 
   justify-content: center;
 
   align-items: center;
+
+  z-index: 1000;
 }
 
 .goal-modal {
@@ -326,6 +387,8 @@
   border-radius: 14px;
 
   width: 500px;
+
+  max-width: 90%;
 }
 
 .goal-modal h2 {
@@ -341,7 +404,8 @@
 }
 
 .goal-modal input,
-.goal-modal textarea {
+.goal-modal textarea,
+.goal-modal select {
   padding: 1rem;
 
   border: 1px solid #ccc;
@@ -363,18 +427,6 @@
   gap: 1rem;
 }
 
-.modal-actions button {
-  border: none;
-
-  padding: 1rem;
-
-  border-radius: 10px;
-
-  background-color: var(--primary-color);
-
-  color: white;
-}
-
 .planning-layout {
   display: grid;
 
@@ -386,7 +438,7 @@
 .calendar-grid {
   display: grid;
 
-  grid-template-columns: repeat(5,1fr);
+  grid-template-columns: repeat(5, 1fr);
 
   gap: 1rem;
 }
@@ -400,7 +452,8 @@
 
   padding: 1rem;
 
-  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 8px
+    rgba(0, 0, 0, 0.05);
 }
 
 .calendar-day-top {
@@ -419,6 +472,7 @@
   color: white;
 
   width: 30px;
+
   height: 30px;
 
   border-radius: 50%;
@@ -480,13 +534,6 @@
   gap: 0.5rem;
 }
 
-.goal-modal select {
-  padding: 1rem;
-
-  border-radius: 10px;
-
-  border: 1px solid #ccc;
-}
 .login-error {
   color: red;
 
@@ -517,4 +564,118 @@
   border-radius: 12px;
 
   margin-bottom: 2rem;
+}
+
+.dashboard-two-columns {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.stopwatch-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stopwatch-header {
+  margin-bottom: 1.5rem;
+}
+
+.stopwatch-header p {
+  color: #64748b;
+  margin-top: 0.3rem;
+}
+
+.stopwatch-time {
+  font-size: 3rem;
+  font-weight: bold;
+  color: var(--primary-color);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.timer-select {
+  width: 100%;
+  padding: 1rem;
+  border: 1px solid #cbd5e1;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+}
+
+.timer-actions {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.pause-btn {
+  border: none;
+  padding: 0.9rem 1.2rem;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #f59e0b;
+  color: white;
+}
+
+.quick-actions.vertical {
+  flex-direction: column;
+}
+
+.sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.session-item {
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.session-item h3 {
+  margin-bottom: 0.5rem;
+}
+
+.session-item p {
+  margin-bottom: 0.3rem;
+  color: #475569;
+}
+
+.session-right {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.session-right strong {
+  font-size: 1.3rem;
+  color: var(--primary-color);
+}
+
+.session-delete-btn {
+  border: none;
+  background-color: var(--danger-color);
+  color: white;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  font-weight: bold;
+}
+
+@media (max-width: 900px) {
+  .dashboard-two-columns {
+    grid-template-columns: 1fr;
+  }
+
+  .timer-actions {
+    flex-direction: column;
+  }
 }

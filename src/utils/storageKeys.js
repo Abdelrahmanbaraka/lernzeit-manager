@@ -5,5 +5,7 @@ export const STORAGE_KEYS = {
 
   DAILY_PLANS: "lernzeit_daily_plans",
 
+  LEARNING_SESSIONS: "lernzeit_learning_sessions",
+
   CURRENT_USER: "lernzeit_current_user",
 };

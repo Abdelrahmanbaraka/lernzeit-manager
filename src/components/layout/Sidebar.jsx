@@ -6,6 +6,7 @@ import {
   FaCalendarAlt,
   FaChartBar,
   FaUser,
+  FaClock,
 } from "react-icons/fa";
 
 function Sidebar() {
@@ -29,6 +30,11 @@ function Sidebar() {
         <NavLink to="/planning" className="nav-item">
           <FaCalendarAlt />
           <span>Lernplan</span>
+        </NavLink>
+
+        <NavLink to="/learning-time" className="nav-item">
+          <FaClock />
+          <span>Lernzeiten</span>
         </NavLink>
 
         <NavLink to="/progress" className="nav-item">
