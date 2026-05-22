@@ -1,6 +1,6 @@
 import { formatDateKey, getDaysInMonth } from "../../utils/dateUtils";
 
-function CalendarGrid({ currentMonth, dailyPlans, onDayClick }) {
+function CalendarGrid({ currentMonth, dailyPlans, onDayClick, onDeletePlan }) {
   const year = currentMonth.getFullYear();
 
   const month = currentMonth.getMonth();
@@ -27,11 +27,20 @@ function CalendarGrid({ currentMonth, dailyPlans, onDayClick }) {
             <div className="calendar-plans">
               {currentPlans.map((plan) => (
                 <div key={plan.id} className="calendar-plan-item">
-                  <small>
-                    {plan.startTime} - {plan.endTime}
-                  </small>
+                  <div>
+                    <small>
+                      {plan.startTime} - {plan.endTime}
+                    </small>
 
-                  <p>{plan.goal}</p>
+                    <p>{plan.goal}</p>
+                  </div>
+
+                  <button
+                    className="calendar-plan-delete"
+                    onClick={() => onDeletePlan(plan.id)}
+                  >
+                    ×
+                  </button>
                 </div>
               ))}
             </div>

@@ -1,9 +1,6 @@
 import { STORAGE_KEYS } from "../utils/storageKeys";
 
-import {
-  getData,
-  saveData,
-} from "./storageService";
+import { getData, saveData } from "./storageService";
 
 export function getMonthPlans() {
   return getData(STORAGE_KEYS.MONTH_PLANS);
@@ -19,4 +16,25 @@ export function getDailyPlans() {
 
 export function saveDailyPlans(plans) {
   saveData(STORAGE_KEYS.DAILY_PLANS, plans);
+}
+
+export function removeGoalFromPlans(goalTitle) {
+  const monthPlans = getMonthPlans();
+
+  const dailyPlans = getDailyPlans();
+
+  const updatedMonthPlans = monthPlans
+    .map((plan) => {
+      return {
+        ...plan,
+        goals: plan.goals.filter((goal) => goal !== goalTitle),
+      };
+    })
+    .filter((plan) => plan.goals.length > 0);
+
+  const updatedDailyPlans = dailyPlans.filter((plan) => plan.goal !== goalTitle);
+
+  saveMonthPlans(updatedMonthPlans);
+
+  saveDailyPlans(updatedDailyPlans);
 }

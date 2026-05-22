@@ -41,6 +41,8 @@ function DashboardPage() {
 
   const today = getTodayDate();
 
+  const currentMonth = today.slice(0, 7);
+
   const todayLearningMinutes = sessions
     .filter((session) => session.date === today)
     .reduce((sum, session) => sum + session.durationMinutes, 0);
@@ -49,9 +51,9 @@ function DashboardPage() {
 
   const completedGoals = goals.filter((goal) => goal.completed).length;
 
-  const plannedHours = monthPlans.reduce((sum, plan) => {
-    return sum + Number(plan.hours || 0);
-  }, 0);
+  const plannedHours = monthPlans
+    .filter((plan) => plan.month === currentMonth)
+    .reduce((sum, plan) => sum + Number(plan.hours || 0), 0);
 
   const todayHours = Math.floor(todayLearningMinutes / 60);
 

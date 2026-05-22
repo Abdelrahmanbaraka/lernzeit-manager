@@ -51,8 +51,8 @@ function ProgressPage() {
   const plannedVsCompletedData = [
     {
       name: "Dieser Monat",
-      geplant: Number(plannedHoursThisMonth.toFixed(2)),
-      absolviert: Number(completedHoursThisMonth.toFixed(2)),
+      geplant: plannedHoursThisMonth,
+      absolviert: completedHoursThisMonth,
     },
   ];
 
@@ -64,7 +64,7 @@ function ProgressPage() {
 
       return {
         name: goal.title,
-        value: Number((totalMinutes / 60).toFixed(2)),
+        value: totalMinutes / 60,
       };
     })
     .filter((item) => item.value > 0);
@@ -90,7 +90,11 @@ function ProgressPage() {
 
                 <YAxis />
 
-                <Tooltip />
+                <Tooltip
+                  formatter={(value) =>
+                    `${Number(value).toFixed(2)} Stunden`
+                  }
+                />
 
                 <Bar dataKey="geplant" fill="#00b0f0" />
 
@@ -112,21 +116,25 @@ function ProgressPage() {
                     dataKey="value"
                     nameKey="name"
                     outerRadius={100}
-                    label
+                    label={({ value }) => `${Number(value).toFixed(2)} h`}
                   >
                     {hoursPerGoalData.map((entry, index) => (
                       <Cell key={entry.name} fill={getChartColor(index)} />
                     ))}
                   </Pie>
 
-                  <Tooltip />
+                  <Tooltip
+                    formatter={(value) =>
+                      `${Number(value).toFixed(2)} Stunden`
+                    }
+                  />
                 </PieChart>
               </ResponsiveContainer>
             )}
           </div>
 
           <div className="chart-card chart-wide">
-            <h2>Gelernte Stunden in den letzten 6 Monaten</h2>
+            <h2>Geplante vs. tatsächliche Stunden in den letzten 6 Monaten</h2>
 
             <ResponsiveContainer width="100%" height={320}>
               <LineChart data={lastSixMonthsData}>
@@ -136,7 +144,11 @@ function ProgressPage() {
 
                 <YAxis />
 
-                <Tooltip />
+                <Tooltip
+                  formatter={(value) =>
+                    `${Number(value).toFixed(2)} Stunden`
+                  }
+                />
 
                 <Line type="monotone" dataKey="geplant" stroke="#00b0f0" />
 
@@ -175,8 +187,8 @@ function getLastSixMonthsData(sessions, monthPlans) {
 
     result.push({
       month: label,
-      geplant: Number(plannedHours.toFixed(2)),
-      tatsächlich: Number(completedHours.toFixed(2)),
+      geplant: plannedHours,
+      tatsächlich: completedHours,
     });
   }
 

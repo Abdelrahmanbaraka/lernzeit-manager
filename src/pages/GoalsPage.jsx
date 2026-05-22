@@ -8,6 +8,8 @@ import GoalItem from "../components/goals/GoalItem";
 
 import { getGoals, saveGoals } from "../services/goalService";
 
+import { removeGoalFromPlans } from "../services/planningService";
+
 function GoalsPage() {
   const [goals, setGoals] = useState([]);
 
@@ -48,10 +50,16 @@ function GoalsPage() {
   }
 
   function handleDeleteGoal(id) {
+    const goalToDelete = goals.find((goal) => goal.id === id);
+
     const confirmed = window.confirm("Ziel wirklich löschen?");
 
     if (!confirmed) {
       return;
+    }
+
+    if (goalToDelete) {
+      removeGoalFromPlans(goalToDelete.title);
     }
 
     const updatedGoals = goals.filter((goal) => goal.id !== id);
@@ -60,11 +68,23 @@ function GoalsPage() {
   }
 
   function handleToggleGoal(id) {
+    const goalToUpdate = goals.find((goal) => goal.id === id);
+
+    if (!goalToUpdate) {
+      return;
+    }
+
+    const willBeCompleted = !goalToUpdate.completed;
+
+    if (willBeCompleted) {
+      removeGoalFromPlans(goalToUpdate.title);
+    }
+
     const updatedGoals = goals.map((goal) => {
       if (goal.id === id) {
         return {
           ...goal,
-          completed: !goal.completed,
+          completed: willBeCompleted,
         };
       }
 

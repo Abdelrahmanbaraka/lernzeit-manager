@@ -13,7 +13,7 @@ function Sidebar() {
   return (
     <aside className="sidebar">
       <div className="sidebar-top">
-        <h2>Lernzeit</h2>
+        <h2>DELEKO</h2>
       </div>
 
       <nav className="sidebar-nav">

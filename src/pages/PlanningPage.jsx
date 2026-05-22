@@ -31,6 +31,8 @@ function PlanningPage() {
 
   const [dailyPlans, setDailyPlans] = useState([]);
 
+  const [isLoaded, setIsLoaded] = useState(false);
+
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
   const [showMonthModal, setShowMonthModal] = useState(false);
@@ -45,15 +47,21 @@ function PlanningPage() {
     setMonthPlans(getMonthPlans());
 
     setDailyPlans(getDailyPlans());
+
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
-    saveMonthPlans(monthPlans);
-  }, [monthPlans]);
+    if (isLoaded) {
+      saveMonthPlans(monthPlans);
+    }
+  }, [monthPlans, isLoaded]);
 
   useEffect(() => {
-    saveDailyPlans(dailyPlans);
-  }, [dailyPlans]);
+    if (isLoaded) {
+      saveDailyPlans(dailyPlans);
+    }
+  }, [dailyPlans, isLoaded]);
 
   function handleMonthSave(plan) {
     const updatedPlans = monthPlans.filter((item) => item.month !== plan.month);
@@ -63,6 +71,18 @@ function PlanningPage() {
 
   function handleDailySave(plan) {
     setDailyPlans([...dailyPlans, plan]);
+  }
+
+  function handleDeleteDailyPlan(id) {
+    const confirmed = window.confirm("Tagesplanung wirklich löschen?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    const updatedDailyPlans = dailyPlans.filter((plan) => plan.id !== id);
+
+    setDailyPlans(updatedDailyPlans);
   }
 
   function handleDayClick(dateKey) {
@@ -106,6 +126,7 @@ function PlanningPage() {
               currentMonth={currentMonth}
               dailyPlans={dailyPlans}
               onDayClick={handleDayClick}
+              onDeletePlan={handleDeleteDailyPlan}
             />
           </div>
 
