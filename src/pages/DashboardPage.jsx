@@ -61,7 +61,7 @@ function DashboardPage() {
     <MainLayout>
       <div className="page-container">
         <div className="dashboard-header">
-          <h1>Willkommen, {user.username}</h1>
+          <h1>Willkommen, {user?.username}</h1>
 
           <p>Verfolge deine Lernzeiten und Ziele.</p>
         </div>
@@ -106,9 +106,11 @@ function DashboardPage() {
                 Lernzeiten öffnen
               </button>
 
-              <button onClick={() => navigate("/goals")}>Neues Ziel</button>
+              <button onClick={() => navigate("/goals")}>Ziele öffnen</button>
 
-              <button onClick={() => navigate("/planning")}>Planung öffnen</button>
+              <button onClick={() => navigate("/planning")}>
+                Planung öffnen
+              </button>
             </div>
           </div>
         </div>

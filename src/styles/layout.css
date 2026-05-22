@@ -679,3 +679,72 @@ button {
     flex-direction: column;
   }
 }
+
+.month-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+
+  background-color: white;
+  padding: 1rem;
+  border-radius: 12px;
+
+  margin-bottom: 2rem;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.month-navigation button {
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50%;
+
+  font-size: 1.2rem;
+}
+
+.modal-hint {
+  margin-bottom: 1rem;
+  color: #64748b;
+}
+
+.progress-grid {
+  display: grid;
+
+  grid-template-columns: repeat(2, 1fr);
+
+  gap: 2rem;
+}
+
+.chart-card {
+  background-color: white;
+
+  padding: 2rem;
+
+  border-radius: 12px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.chart-card h2 {
+  margin-bottom: 1.5rem;
+}
+
+.chart-wide {
+  grid-column: span 2;
+}
+
+@media (max-width: 900px) {
+  .progress-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-wide {
+    grid-column: span 1;
+  }
+}

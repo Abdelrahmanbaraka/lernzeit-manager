@@ -8,9 +8,7 @@ import DailyPlanForm from "../components/planning/DailyPlanForm";
 
 import CalendarGrid from "../components/planning/CalendarGrid";
 
-import {
-  getGoals,
-} from "../services/goalService";
+import { getGoals } from "../services/goalService";
 
 import {
   getMonthPlans,
@@ -19,23 +17,27 @@ import {
   saveDailyPlans,
 } from "../services/planningService";
 
+import {
+  getMonthName,
+  getMonthInputValue,
+  getNextMonth,
+  getPreviousMonth,
+} from "../utils/dateUtils";
+
 function PlanningPage() {
   const [goals, setGoals] = useState([]);
 
-  const [monthPlans, setMonthPlans] =
-    useState([]);
+  const [monthPlans, setMonthPlans] = useState([]);
 
-  const [dailyPlans, setDailyPlans] =
-    useState([]);
+  const [dailyPlans, setDailyPlans] = useState([]);
 
-  const [showMonthModal, setShowMonthModal] =
-    useState(false);
+  const [currentMonth, setCurrentMonth] = useState(new Date());
 
-  const [showDailyModal, setShowDailyModal] =
-    useState(false);
+  const [showMonthModal, setShowMonthModal] = useState(false);
 
-  const [selectedDay, setSelectedDay] =
-    useState(null);
+  const [showDailyModal, setShowDailyModal] = useState(false);
+
+  const [selectedDate, setSelectedDate] = useState(null);
 
   useEffect(() => {
     setGoals(getGoals());
@@ -54,18 +56,26 @@ function PlanningPage() {
   }, [dailyPlans]);
 
   function handleMonthSave(plan) {
-    setMonthPlans([...monthPlans, plan]);
+    const updatedPlans = monthPlans.filter((item) => item.month !== plan.month);
+
+    setMonthPlans([...updatedPlans, plan]);
   }
 
   function handleDailySave(plan) {
     setDailyPlans([...dailyPlans, plan]);
   }
 
-  function handleDayClick(day) {
-    setSelectedDay(day);
+  function handleDayClick(dateKey) {
+    setSelectedDate(dateKey);
 
     setShowDailyModal(true);
   }
+
+  const selectedMonthValue = getMonthInputValue(currentMonth);
+
+  const currentMonthPlans = monthPlans.filter(
+    (plan) => plan.month === selectedMonthValue
+  );
 
   return (
     <MainLayout>
@@ -73,51 +83,48 @@ function PlanningPage() {
         <div className="page-header">
           <h1>Lernplan</h1>
 
-          <button
-            className="primary-btn"
-            onClick={() =>
-              setShowMonthModal(true)
-            }
-          >
+          <button className="primary-btn" onClick={() => setShowMonthModal(true)}>
             Monat planen
+          </button>
+        </div>
+
+        <div className="month-navigation">
+          <button onClick={() => setCurrentMonth(getPreviousMonth(currentMonth))}>
+            ←
+          </button>
+
+          <h2>{getMonthName(currentMonth)}</h2>
+
+          <button onClick={() => setCurrentMonth(getNextMonth(currentMonth))}>
+            →
           </button>
         </div>
 
         <div className="planning-layout">
           <div className="calendar-section">
             <CalendarGrid
+              currentMonth={currentMonth}
               dailyPlans={dailyPlans}
               onDayClick={handleDayClick}
             />
           </div>
 
           <div className="month-plan-section">
-            <h2>Monatspläne</h2>
+            <h2>Monatsplan</h2>
 
-            {monthPlans.length === 0 ? (
-              <p>
-                Noch keine Monatsplanung.
-              </p>
+            {currentMonthPlans.length === 0 ? (
+              <p>Noch keine Monatsplanung für diesen Monat.</p>
             ) : (
-              monthPlans.map((plan) => (
-                <div
-                  key={plan.id}
-                  className="month-plan-card"
-                >
+              currentMonthPlans.map((plan) => (
+                <div key={plan.id} className="month-plan-card">
                   <h3>{plan.month}</h3>
 
-                  <p>
-                    Stunden: {plan.hours}
-                  </p>
+                  <p>Geplante Stunden: {plan.hours}</p>
 
                   <ul>
-                    {plan.goals.map(
-                      (goal, index) => (
-                        <li key={index}>
-                          {goal}
-                        </li>
-                      )
-                    )}
+                    {plan.goals.map((goal, index) => (
+                      <li key={index}>{goal}</li>
+                    ))}
                   </ul>
                 </div>
               ))
@@ -128,21 +135,18 @@ function PlanningPage() {
         {showMonthModal && (
           <MonthPlanForm
             goals={goals}
+            currentMonth={currentMonth}
             onSave={handleMonthSave}
-            onClose={() =>
-              setShowMonthModal(false)
-            }
+            onClose={() => setShowMonthModal(false)}
           />
         )}
 
         {showDailyModal && (
           <DailyPlanForm
             goals={goals}
-            selectedDate={selectedDay}
+            selectedDate={selectedDate}
             onSave={handleDailySave}
-            onClose={() =>
-              setShowDailyModal(false)
-            }
+            onClose={() => setShowDailyModal(false)}
           />
         )}
       </div>

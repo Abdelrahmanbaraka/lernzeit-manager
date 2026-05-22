@@ -1,21 +1,26 @@
 import { useState } from "react";
 
-function DailyPlanForm({
-  goals,
-  selectedDate,
-  onSave,
-  onClose,
-}) {
-  const [startTime, setStartTime] =
-    useState("");
+function DailyPlanForm({ goals, selectedDate, onSave, onClose }) {
+  const [startTime, setStartTime] = useState("");
 
-  const [endTime, setEndTime] =
-    useState("");
+  const [endTime, setEndTime] = useState("");
 
   const [goal, setGoal] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    if (!startTime || !endTime || !goal) {
+      alert("Bitte alle Felder ausfüllen.");
+
+      return;
+    }
+
+    if (endTime <= startTime) {
+      alert("Die Endzeit muss nach der Startzeit liegen.");
+
+      return;
+    }
 
     onSave({
       id: Date.now(),
@@ -37,52 +42,35 @@ function DailyPlanForm({
       <div className="goal-modal">
         <h2>Tagesplanung</h2>
 
+        <p className="modal-hint">Datum: {selectedDate}</p>
+
         <form onSubmit={handleSubmit}>
           <input
             type="time"
             value={startTime}
-            onChange={(e) =>
-              setStartTime(e.target.value)
-            }
+            onChange={(event) => setStartTime(event.target.value)}
           />
 
           <input
             type="time"
             value={endTime}
-            onChange={(e) =>
-              setEndTime(e.target.value)
-            }
+            onChange={(event) => setEndTime(event.target.value)}
           />
 
-          <select
-            value={goal}
-            onChange={(e) =>
-              setGoal(e.target.value)
-            }
-          >
-            <option value="">
-              Ziel auswählen
-            </option>
+          <select value={goal} onChange={(event) => setGoal(event.target.value)}>
+            <option value="">Ziel auswählen</option>
 
-            {goals.map((goal) => (
-              <option
-                key={goal.id}
-                value={goal.title}
-              >
-                {goal.title}
+            {goals.map((goalItem) => (
+              <option key={goalItem.id} value={goalItem.title}>
+                {goalItem.title}
               </option>
             ))}
           </select>
 
           <div className="modal-actions">
-            <button type="submit">
-              Speichern
-            </button>
+            <button type="submit">Speichern</button>
 
-            <button
-              type="button"
-              onClick={onClose}
-            >
+            <button type="button" onClick={onClose}>
               Abbrechen
             </button>
           </div>

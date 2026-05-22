@@ -6,34 +6,35 @@ import GoalForm from "../components/goals/GoalForm";
 
 import GoalItem from "../components/goals/GoalItem";
 
-import {
-  getGoals,
-  saveGoals,
-} from "../services/goalService";
+import { getGoals, saveGoals } from "../services/goalService";
 
 function GoalsPage() {
   const [goals, setGoals] = useState([]);
 
-  const [showModal, setShowModal] =
-    useState(false);
+  const [isLoaded, setIsLoaded] = useState(false);
 
-  const [editingGoal, setEditingGoal] =
-    useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const [editingGoal, setEditingGoal] = useState(null);
 
   useEffect(() => {
     const storedGoals = getGoals();
 
     setGoals(storedGoals);
+
+    setIsLoaded(true);
   }, []);
 
   useEffect(() => {
-    saveGoals(goals);
-  }, [goals]);
+    if (isLoaded) {
+      saveGoals(goals);
+    }
+  }, [goals, isLoaded]);
 
-  function handleAddGoal(goal) {
+  function handleSaveGoal(goal) {
     if (editingGoal) {
-      const updatedGoals = goals.map((g) =>
-        g.id === goal.id ? goal : g
+      const updatedGoals = goals.map((existingGoal) =>
+        existingGoal.id === goal.id ? goal : existingGoal
       );
 
       setGoals(updatedGoals);
@@ -47,19 +48,15 @@ function GoalsPage() {
   }
 
   function handleDeleteGoal(id) {
-    const confirmed = window.confirm(
-      "Ziel wirklich löschen?"
-    );
+    const confirmed = window.confirm("Ziel wirklich löschen?");
 
     if (!confirmed) {
       return;
     }
 
-    const filteredGoals = goals.filter(
-      (goal) => goal.id !== id
-    );
+    const updatedGoals = goals.filter((goal) => goal.id !== id);
 
-    setGoals(filteredGoals);
+    setGoals(updatedGoals);
   }
 
   function handleToggleGoal(id) {
@@ -83,6 +80,12 @@ function GoalsPage() {
     setShowModal(true);
   }
 
+  function handleCloseModal() {
+    setShowModal(false);
+
+    setEditingGoal(null);
+  }
+
   return (
     <MainLayout>
       <div className="page-container">
@@ -103,9 +106,7 @@ function GoalsPage() {
 
         {goals.length === 0 ? (
           <div className="empty-state">
-            <p>
-              Noch keine Lernziele vorhanden.
-            </p>
+            <p>Noch keine Lernziele vorhanden.</p>
           </div>
         ) : (
           <div className="goals-list">
@@ -123,10 +124,8 @@ function GoalsPage() {
 
         {showModal && (
           <GoalForm
-            onSave={handleAddGoal}
-            onClose={() =>
-              setShowModal(false)
-            }
+            onSave={handleSaveGoal}
+            onClose={handleCloseModal}
             existingGoal={editingGoal}
           />
         )}

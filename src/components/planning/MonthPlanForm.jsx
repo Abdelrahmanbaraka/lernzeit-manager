@@ -1,24 +1,17 @@
 import { useState } from "react";
 
-function MonthPlanForm({
-  goals,
-  onSave,
-  onClose,
-}) {
-  const [month, setMonth] = useState("");
+import { getMonthInputValue } from "../../utils/dateUtils";
+
+function MonthPlanForm({ goals, currentMonth, onSave, onClose }) {
+  const [month, setMonth] = useState(getMonthInputValue(currentMonth));
 
   const [hours, setHours] = useState("");
 
-  const [selectedGoals, setSelectedGoals] =
-    useState([]);
+  const [selectedGoals, setSelectedGoals] = useState([]);
 
   function handleGoalSelect(goalTitle) {
     if (selectedGoals.includes(goalTitle)) {
-      setSelectedGoals(
-        selectedGoals.filter(
-          (goal) => goal !== goalTitle
-        )
-      );
+      setSelectedGoals(selectedGoals.filter((goal) => goal !== goalTitle));
 
       return;
     }
@@ -29,21 +22,24 @@ function MonthPlanForm({
       return;
     }
 
-    setSelectedGoals([
-      ...selectedGoals,
-      goalTitle,
-    ]);
+    setSelectedGoals([...selectedGoals, goalTitle]);
   }
 
   function handleSubmit(event) {
     event.preventDefault();
+
+    if (!month || !hours || selectedGoals.length === 0) {
+      alert("Bitte Monat, Stunden und mindestens ein Ziel auswählen.");
+
+      return;
+    }
 
     onSave({
       id: Date.now(),
 
       month,
 
-      hours,
+      hours: Number(hours),
 
       goals: selectedGoals,
     });
@@ -60,52 +56,41 @@ function MonthPlanForm({
           <input
             type="month"
             value={month}
-            onChange={(e) =>
-              setMonth(e.target.value)
-            }
+            onChange={(event) => setMonth(event.target.value)}
           />
 
           <input
             type="number"
+            min="1"
             placeholder="Geplante Stunden"
             value={hours}
-            onChange={(e) =>
-              setHours(e.target.value)
-            }
+            onChange={(event) => setHours(event.target.value)}
           />
 
           <div className="goal-selection">
             <h4>Ziele auswählen</h4>
 
-            {goals.map((goal) => (
-              <label
-                key={goal.id}
-                className="checkbox-row"
-              >
-                <input
-                  type="checkbox"
-                  checked={selectedGoals.includes(
-                    goal.title
-                  )}
-                  onChange={() =>
-                    handleGoalSelect(goal.title)
-                  }
-                />
+            {goals.length === 0 ? (
+              <p>Bitte zuerst Lernziele erstellen.</p>
+            ) : (
+              goals.map((goal) => (
+                <label key={goal.id} className="checkbox-row">
+                  <input
+                    type="checkbox"
+                    checked={selectedGoals.includes(goal.title)}
+                    onChange={() => handleGoalSelect(goal.title)}
+                  />
 
-                {goal.title}
-              </label>
-            ))}
+                  {goal.title}
+                </label>
+              ))
+            )}
           </div>
 
           <div className="modal-actions">
-            <button type="submit">
-              Speichern
-            </button>
+            <button type="submit">Speichern</button>
 
-            <button
-              type="button"
-              onClick={onClose}
-            >
+            <button type="button" onClick={onClose}>
               Abbrechen
             </button>
           </div>
