@@ -148,91 +148,141 @@ Das Projekt verwendet folgende Technologien und Bibliotheken:
 
 ## 4. Voraussetzungen
 
-Vor der Installation müssen folgende Programme installiert sein:
+Vor der Installation müssen folgende Programme auf dem Rechner installiert sein.
 
 ### Node.js
 
-Empfohlen: Node.js Version 22
+Empfohlen wird Node.js Version 22.
 
-Prüfen mit:
+Version prüfen:
+
+```bash
+
+# Lernzeit-Manager
+
+## 4. Voraussetzungen
+
+Vor der Installation müssen folgende Programme auf dem Rechner installiert sein.
+
+### Node.js
+
+Empfohlen wird **Node.js Version 22**.
+
+Version prüfen:
 
 ```bash
 node -v
+```
 
-
-
-npm
+### npm
 
 npm wird zusammen mit Node.js installiert.
 
-Prüfen mit:
+Version prüfen:
 
+```bash
 npm -v
-Git
+```
 
-Prüfen mit:
+### Git
 
+Git wird für die Versionsverwaltung und das Klonen des Repositorys benötigt.
+
+Version prüfen:
+
+```bash
 git --version
-Visual Studio Code
+```
 
-Empfohlen als Entwicklungsumgebung.
+### Visual Studio Code
 
-5. Installation
+Visual Studio Code wird als Entwicklungsumgebung empfohlen.
 
-Repository klonen:
+---
 
+## 5. Installation
+
+### Repository klonen
+
+```bash
 git clone https://github.com/Abdelrahmanbaraka/lernzeit-manager.git
+```
 
-In den Projektordner wechseln:
+### In den Projektordner wechseln
 
+```bash
 cd lernzeit-manager
+```
 
-Abhängigkeiten installieren:
+### Abhängigkeiten installieren
 
+```bash
 npm install
+```
 
 Falls einzelne Bibliotheken fehlen, können sie manuell installiert werden:
 
+```bash
 npm install react-router-dom
 npm install recharts
 npm install react-icons
 npm install prop-types
+```
 
 Normalerweise reicht aber:
 
+```bash
 npm install
+```
 
-weil alle Abhängigkeiten in der Datei package.json stehen.
+Alle benötigten Abhängigkeiten stehen in der Datei `package.json`.
 
-6. Anwendung starten
+---
+
+## 6. Anwendung starten
 
 Die Anwendung lokal starten:
 
+```bash
 npm run dev
+```
 
 Danach erscheint im Terminal eine lokale URL, meistens:
 
+```text
 http://localhost:5173/
+```
 
-Diese URL im Browser öffnen.
+Diese URL wird im Browser geöffnet.
 
-7. Login-Daten für das Team
+---
 
-Die Anwendung nutzt Mock-Login-Daten.
+## 7. Login-Daten für das Team
 
-Student Account
-Benutzername: student
-Passwort: 1234
-Tutor / Admin Account
-Benutzername: tutor
-Passwort: 1234
+Die Anwendung nutzt Mock-Login-Daten.  
+Die Accounts dienen nur zu Test- und Demonstrationszwecken.
 
-Diese Accounts sind nur für Test- und Demonstrationszwecke vorgesehen.
+### Student Account
 
-8. Projektstruktur
+| Feld | Wert |
+|---|---|
+| Benutzername | `student` |
+| Passwort | `1234` |
 
-Die wichtigste Projektstruktur:
+### Tutor / Admin Account
 
+| Feld | Wert |
+|---|---|
+| Benutzername | `tutor` |
+| Passwort | `1234` |
+
+---
+
+## 8. Projektstruktur
+
+Die wichtigste Projektstruktur sieht wie folgt aus:
+
+```text
 src/
 │
 ├── assets/
@@ -280,131 +330,184 @@ src/
 ├── App.jsx
 ├── main.jsx
 └── routes.jsx
-9. Datenhaltung
+```
 
-Die Anwendung verwendet localStorage.
+---
 
-Es gibt keine zentrale Datenbank und kein Backend.
+## 9. Datenhaltung
+
+Die Anwendung verwendet `localStorage`.
+
+Es gibt:
+
+- keine zentrale Datenbank
+- kein Backend
+- keine serverseitige Benutzerverwaltung
 
 Gespeichert werden unter anderem:
 
-aktueller Nutzer
-Lernziele
-Monatsplanungen
-Tagesplanungen
-Lernsessions
+- aktueller Nutzer
+- Lernziele
+- Monatsplanungen
+- Tagesplanungen
+- Lernsessions
 
-Die Speicherung erfolgt nutzerbezogen.
-Das bedeutet, dass student und tutor getrennte lokale Daten haben.
+Die Speicherung erfolgt nutzerbezogen.  
+Das bedeutet, dass `student` und `tutor` getrennte lokale Daten haben.
 
-Beispiel:
+Beispiele:
 
+```text
 student_lernzeit_goals
 student_lernzeit_month_plans
 student_lernzeit_daily_plans
 student_lernzeit_learning_sessions
+```
 
 Die Daten bleiben im Browser gespeichert, bis sie vom Nutzer gelöscht werden oder der Browser-Speicher geleert wird.
 
-10. Git-Workflow
+---
 
-Aktuellen Stand prüfen:
+## 10. Git-Workflow
 
+### Aktuellen Stand prüfen
+
+```bash
 git status
+```
 
-Änderungen hinzufügen:
+### Änderungen hinzufügen
 
+```bash
 git add .
+```
 
-Commit erstellen:
+### Commit erstellen
 
+```bash
 git commit -m "Beschreibung der Änderung"
+```
 
-Änderungen zu GitHub pushen:
+### Änderungen zu GitHub pushen
 
+```bash
 git push origin main
+```
 
-Aktuellen Stand von GitHub holen:
+### Aktuellen Stand von GitHub holen
 
+```bash
 git pull origin main
-11. Build
+```
+
+---
+
+## 11. Build
 
 Für einen Produktions-Build:
 
+```bash
 npm run build
+```
 
-Der Build wird im Ordner dist/ erstellt.
+Der Build wird im Ordner `dist/` erstellt.
 
 Build lokal testen:
 
+```bash
 npm run preview
-12. Deployment mit Netlify
+```
+
+---
+
+## 12. Deployment mit Netlify
 
 Die Anwendung kann über Netlify bereitgestellt werden.
 
-Vorgehen
-Netlify öffnen
-Mit GitHub verbinden
-Repository lernzeit-manager auswählen
-Build Command setzen:
+### Vorgehen
+
+1. Netlify öffnen
+2. Mit GitHub verbinden
+3. Repository `lernzeit-manager` auswählen
+4. Build Command setzen:
+
+```bash
 npm run build
-Publish Directory setzen:
+```
+
+5. Publish Directory setzen:
+
+```text
 dist
-Deployment starten
+```
+
+6. Deployment starten
 
 Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 
-13. Hinweise für Tests
+---
 
-Wichtige Testfälle:
+## 13. Hinweise für Tests
 
-Login
-Login mit student / 1234
-Login mit tutor / 1234
-Login mit falschen Daten
-Lernziele
-Ziel erstellen
-Ziel bearbeiten
-Ziel löschen
-Ziel als erledigt markieren
-Prüfen, ob Ziel nach Seitenwechsel gespeichert bleibt
-Lernplan
-Monatsplan erstellen
-Geplante Stunden eintragen
-Ziele auswählen
-Tagesplanung im Kalender erstellen
-Zwischen Monaten wechseln
-Prüfen, ob Tagesplanung nach Seitenwechsel erhalten bleibt
-Tagesplanung über X löschen
-Lernzeiten
-Stoppuhr starten
-Stoppuhr pausieren
-Stoppuhr stoppen
-Lernsession manuell nachtragen
-Lernsession löschen
-Fortschritt
-Geplante Stunden mit tatsächlichen Lernzeiten vergleichen
-Investierte Stunden pro Ziel prüfen
-Fortschrittstabelle pro Lernziel prüfen
-Profil
-Logout testen
-Daten löschen testen
-14. Wichtige Hinweise
-Das Login ist nur ein Mock-Login.
-Es gibt keine echte Authentifizierung.
-Es gibt kein Backend.
-Es gibt keine zentrale Datenbank.
-Die Daten werden lokal im Browser gespeichert.
-Beim Löschen der Browserdaten können gespeicherte Daten verloren gehen.
-Die Anwendung ist für Demonstrations- und Projektzwecke gedacht.
-HTTPS wird im Deployment über Netlify bereitgestellt.
-Autor / Team
+### Login
 
-Projekt: Lernzeit-Manager
+- Login mit `student / 1234`
+- Login mit `tutor / 1234`
+- Login mit falschen Daten
 
-Teammitglieder:
+### Lernziele
 
-Yannick Laubinger
-Isabella Buchwieser
-Abdelrahman Baraka
-Anikka Lynge
+- Ziel erstellen
+- Ziel bearbeiten
+- Ziel löschen
+- Ziel als erledigt markieren
+- Prüfen, ob Ziele nach einem Seitenwechsel gespeichert bleiben
+
+### Lernplan
+
+- Monatsplan erstellen
+- Geplante Stunden eintragen
+- Ziele auswählen
+- Tagesplanung im Kalender erstellen
+- Zwischen Monaten wechseln
+- Prüfen, ob Tagesplanungen nach einem Seitenwechsel erhalten bleiben
+- Tagesplanung über X löschen
+
+### Lernzeiten
+
+- Stoppuhr starten
+- Stoppuhr pausieren
+- Stoppuhr stoppen
+- Lernsession manuell nachtragen
+- Lernsession löschen
+
+### Fortschritt
+
+- Geplante Stunden mit tatsächlichen Lernzeiten vergleichen
+- Investierte Stunden pro Ziel prüfen
+- Fortschrittstabelle pro Lernziel prüfen
+
+### Profil
+
+- Logout testen
+- Daten löschen testen
+
+---
+
+## 14. Wichtige Hinweise
+
+- Das Login ist nur ein Mock-Login.
+- Es gibt keine echte Authentifizierung.
+- Es gibt kein Backend.
+- Es gibt keine zentrale Datenbank.
+- Die Daten werden lokal im Browser gespeichert.
+- Beim Löschen der Browserdaten können gespeicherte Daten verloren gehen.
+- Die Anwendung ist für Demonstrations- und Projektzwecke gedacht.
+- HTTPS wird im Deployment über Netlify bereitgestellt.
+
+---
+
+
+
+**Projekt:** Lernzeit-Manager
+
