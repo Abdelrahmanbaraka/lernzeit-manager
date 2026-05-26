@@ -769,3 +769,29 @@ button {
   font-size: 1rem;
   line-height: 1;
 }
+
+.goal-progress-table-wrapper {
+  margin-top: 2rem;
+  overflow-x: auto;
+}
+
+.goal-progress-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.goal-progress-table th,
+.goal-progress-table td {
+  padding: 0.9rem;
+  border-bottom: 1px solid #e2e8f0;
+  text-align: left;
+}
+
+.goal-progress-table th {
+  background-color: #f8fafc;
+  font-weight: bold;
+}
+
+.goal-progress-table tr:hover {
+  background-color: #f8fafc;
+}
