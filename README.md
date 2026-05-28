@@ -146,17 +146,6 @@ Das Projekt verwendet folgende Technologien und Bibliotheken:
 
 ---
 
-## 4. Voraussetzungen
-
-Vor der Installation müssen folgende Programme auf dem Rechner installiert sein.
-
-### Node.js
-
-Empfohlen wird Node.js Version 22.
-
-Version prüfen:
-
-```bash
 
 # Lernzeit-Manager
 
