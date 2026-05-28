@@ -147,8 +147,6 @@ Das Projekt verwendet folgende Technologien und Bibliotheken:
 ---
 
 
-# Lernzeit-Manager
-
 ## 4. Voraussetzungen
 
 Vor der Installation müssen folgende Programme auf dem Rechner installiert sein.
