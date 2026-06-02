@@ -8,4 +8,8 @@ export const STORAGE_KEYS = {
   LEARNING_SESSIONS: "lernzeit_learning_sessions",
 
   CURRENT_USER: "lernzeit_current_user",
+
+  ACTIVE_STOPWATCH: "lernzeit_active_stopwatch",
+
+  NOTIFIED_PLANS: "lernzeit_notified_plans",
 };

@@ -5,6 +5,15 @@ export function getMonthName(date) {
   });
 }
 
+export function formatGermanMonth(monthKey) {
+  const [year, month] = monthKey.split("-").map(Number);
+
+  return new Date(year, month - 1, 1).toLocaleDateString("de-DE", {
+    month: "long",
+    year: "numeric",
+  });
+}
+
 export function getDaysInMonth(date) {
   const year = date.getFullYear();
 
@@ -27,6 +36,58 @@ export function getMonthInputValue(date) {
   const month = String(date.getMonth() + 1).padStart(2, "0");
 
   return `${year}-${month}`;
+}
+
+export function getAllowedMonthOptions() {
+  const today = new Date();
+
+  return Array.from({ length: 6 }, (_, index) => {
+    const date = new Date(today.getFullYear(), today.getMonth() + index, 1);
+
+    const value = getMonthInputValue(date);
+
+    return {
+      value,
+      label: formatGermanMonth(value),
+    };
+  });
+}
+
+export function isAllowedMonth(monthKey) {
+  return getAllowedMonthOptions().some((option) => option.value === monthKey);
+}
+
+export function addDays(date, days) {
+  const result = new Date(date);
+
+  result.setDate(result.getDate() + days);
+
+  return result;
+}
+
+export function formatDateFromDate(date) {
+  const year = date.getFullYear();
+
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function getDailyPlanDateRange() {
+  const today = new Date();
+
+  return {
+    min: formatDateFromDate(today),
+    max: formatDateFromDate(addDays(today, 30)),
+  };
+}
+
+export function isAllowedDailyPlanDate(dateKey) {
+  const { min, max } = getDailyPlanDateRange();
+
+  return dateKey >= min && dateKey <= max;
 }
 
 export function getNextMonth(date) {

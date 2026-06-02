@@ -20,7 +20,7 @@ function SessionList({ sessions, onDelete }) {
 
             <p>Datum: {session.date}</p>
 
-            {session.source === "manual" && (
+            {session.startTime && session.endTime && (
               <small>
                 {session.startTime} - {session.endTime}
               </small>

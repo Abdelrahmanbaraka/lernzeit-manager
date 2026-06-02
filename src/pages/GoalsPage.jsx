@@ -9,21 +9,15 @@ import GoalItem from "../components/goals/GoalItem";
 import { getGoals, saveGoals } from "../services/goalService";
 
 function GoalsPage() {
-  const [goals, setGoals] = useState([]);
+  const [goals, setGoals] = useState(() => getGoals());
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded] = useState(true);
 
   const [showModal, setShowModal] = useState(false);
 
   const [editingGoal, setEditingGoal] = useState(null);
 
-  useEffect(() => {
-    const storedGoals = getGoals();
-
-    setGoals(storedGoals);
-
-    setIsLoaded(true);
-  }, []);
+  const [showCompletedGoals, setShowCompletedGoals] = useState(false);
 
   useEffect(() => {
     if (isLoaded) {
@@ -86,6 +80,10 @@ function GoalsPage() {
     setEditingGoal(null);
   }
 
+  const activeGoals = goals.filter((goal) => !goal.completed);
+
+  const completedGoals = goals.filter((goal) => goal.completed);
+
   return (
     <MainLayout>
       <div className="page-container">
@@ -109,17 +107,60 @@ function GoalsPage() {
             <p>Noch keine Lernziele vorhanden.</p>
           </div>
         ) : (
-          <div className="goals-list">
-            {goals.map((goal) => (
-              <GoalItem
-                key={goal.id}
-                goal={goal}
-                onDelete={handleDeleteGoal}
-                onToggle={handleToggleGoal}
-                onEdit={handleEditGoal}
-              />
-            ))}
-          </div>
+          <>
+            <section className="goals-section">
+              <h2>Aktive Lernziele</h2>
+
+              {activeGoals.length === 0 ? (
+                <p>Keine aktiven Lernziele vorhanden.</p>
+              ) : (
+                <div className="goals-list">
+                  {activeGoals.map((goal) => (
+                    <GoalItem
+                      key={goal.id}
+                      goal={goal}
+                      onDelete={handleDeleteGoal}
+                      onToggle={handleToggleGoal}
+                      onEdit={handleEditGoal}
+                    />
+                  ))}
+                </div>
+              )}
+            </section>
+
+            <section className="goals-section">
+              <div className="section-title-row">
+                <h2>Erledigte Lernziele</h2>
+
+                <button
+                  className="primary-btn"
+                  onClick={() => setShowCompletedGoals(!showCompletedGoals)}
+                >
+                  {showCompletedGoals
+                    ? "Erledigte Ziele ausblenden"
+                    : "Erledigte Ziele anzeigen"}
+                </button>
+              </div>
+
+              {showCompletedGoals && (
+                completedGoals.length === 0 ? (
+                  <p>Noch keine erledigten Lernziele vorhanden.</p>
+                ) : (
+                  <div className="goals-list">
+                    {completedGoals.map((goal) => (
+                      <GoalItem
+                        key={goal.id}
+                        goal={goal}
+                        onDelete={handleDeleteGoal}
+                        onToggle={handleToggleGoal}
+                        onEdit={handleEditGoal}
+                      />
+                    ))}
+                  </div>
+                )
+              )}
+            </section>
+          </>
         )}
 
         {showModal && (

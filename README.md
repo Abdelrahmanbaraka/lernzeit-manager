@@ -63,6 +63,8 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 - Anzeige geplanter Stunden für den aktuellen Monat
 - Anzeige erledigter Ziele
 - Stoppuhr zur direkten Erfassung von Lernzeiten
+- Stoppuhr läuft bei Navigation innerhalb der App weiter
+- Schnellzugriff zum Erstellen eines Lernziels
 - Schnellzugriff auf wichtige Seiten
 
 ### Lernziele
@@ -71,34 +73,41 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 - Lernziel bearbeiten
 - Lernziel löschen
 - Lernziel als erledigt markieren
+- Aktive und erledigte Lernziele werden getrennt angezeigt
+- Erledigte Lernziele bleiben als Historie sichtbar, bis sie manuell gelöscht werden
 - Anzeige von Status-Emojis
 - Speicherung im localStorage
 
 ### Lernplan / Kalender
 
-- Monatsplanung mit geplanter Lernzeit
+- Monatsplanung mit geplanter Lernzeit für den aktuellen Monat und die nächsten 5 Monate
+- Monatsplanungen können bearbeitet und gelöscht werden
 - Auswahl mehrerer Ziele pro Monat
-- Tagesplanung im Kalender
+- Tagesplanung im Kalender für heute bis maximal 30 Tage in die Zukunft
+- Tagesplanung kann direkt über den Button `Tagesplan erstellen` oder über das `+` im Kalender erstellt werden
+- Tagesplanungen können bearbeitet und gelöscht werden
 - Startzeit, Endzeit und Ziel pro Tagesplanung
 - Navigation zwischen Monaten
 - Kalender zeigt echte Anzahl der Tage pro Monat
 - Tagesplanungen bleiben erhalten, auch wenn ein Ziel als erledigt markiert wird
+- Tagesplanungen bleiben auch sichtbar, wenn ein Lernziel später gelöscht wird
 - Tagesplanungen werden nur über das `X` im Kalender gelöscht
+- Browser-Benachrichtigung 15 Minuten nach verpasstem Start einer geplanten Lernsession, sofern Benachrichtigungen erlaubt sind
 
 ### Lernzeiten
 
 - Lernzeit über Stoppuhr erfassen
 - Lernsession manuell nachtragen
 - Lernsession löschen
-- Speicherung mit Ziel, Datum und Dauer
+- Speicherung mit Ziel, Datum, Startzeit, Endzeit und Dauer
+- Stoppuhr-Sessions speichern ebenfalls Start- und Endzeit
 
 ### Fortschritt
 
-- Diagramm: geplante Stunden vs. absolvierte Stunden im aktuellen Monat
-- Diagramm: investierte Stunden pro Ziel
-- Diagramm: geplante vs. tatsächliche Stunden in den letzten 6 Monaten
-- Detaillierte Fortschrittstabelle pro Lernziel
-- Anzeige von geplanten Stunden, tatsächlichen Stunden, Fortschritt und Status
+- Übersicht aktiver und erledigter Ziele
+- Einfacher Monatsvergleich von geplanten und tatsächlich gelernten Stunden
+- Fortschrittsbalken pro Lernziel
+- Anzeige von Fälligkeitsdatum, geplanten Stunden, gelernten Stunden, Fortschritt und Status
 
 ### Profil
 
@@ -338,6 +347,8 @@ Gespeichert werden unter anderem:
 - Monatsplanungen
 - Tagesplanungen
 - Lernsessions
+- aktive Stoppuhr
+- bereits versendete Erinnerungen für verpasste Tagesplanungen
 
 Die Speicherung erfolgt nutzerbezogen.  
 Das bedeutet, dass `student` und `tutor` getrennte lokale Daten haben.
@@ -349,6 +360,8 @@ student_lernzeit_goals
 student_lernzeit_month_plans
 student_lernzeit_daily_plans
 student_lernzeit_learning_sessions
+student_lernzeit_active_stopwatch
+student_lernzeit_notified_plans
 ```
 
 Die Daten bleiben im Browser gespeichert, bis sie vom Nutzer gelöscht werden oder der Browser-Speicher geleert wird.
@@ -452,27 +465,40 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 
 ### Lernplan
 
-- Monatsplan erstellen
+- Monatsplan für den aktuellen Monat oder die nächsten 5 Monate erstellen
+- Monatsplan bearbeiten und löschen
 - Geplante Stunden eintragen
 - Ziele auswählen
-- Tagesplanung im Kalender erstellen
+- Tagesplanung im Kalender oder über `Tagesplan erstellen` anlegen
+- Prüfen, dass neue Tagesplanungen nur für die nächsten 30 Tage möglich sind
+- Tagesplanung bearbeiten und löschen
 - Zwischen Monaten wechseln
 - Prüfen, ob Tagesplanungen nach einem Seitenwechsel erhalten bleiben
+- Prüfen, ob vergangene Tagesplanungen sichtbar bleiben
 - Tagesplanung über X löschen
 
 ### Lernzeiten
 
 - Stoppuhr starten
+- Während laufender Stoppuhr innerhalb der App navigieren
 - Stoppuhr pausieren
 - Stoppuhr stoppen
+- Prüfen, ob Stoppuhr-Sessions Start- und Endzeit anzeigen
 - Lernsession manuell nachtragen
 - Lernsession löschen
 
 ### Fortschritt
 
 - Geplante Stunden mit tatsächlichen Lernzeiten vergleichen
-- Investierte Stunden pro Ziel prüfen
-- Fortschrittstabelle pro Lernziel prüfen
+- Aktive und erledigte Ziele prüfen
+- Fortschrittsbalken pro Lernziel prüfen
+- Status Offen, Erledigt und Überfällig prüfen
+
+### Benachrichtigungen
+
+- Browser-Benachrichtigungen erlauben
+- Tagesplanung mit Startzeit in der Vergangenheit anlegen
+- Prüfen, ob nach 15 Minuten ohne passende Lernsession eine Erinnerung erscheint
 
 ### Profil
 
@@ -497,4 +523,3 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 
 
 **Projekt:** Lernzeit-Manager
-

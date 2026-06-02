@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import MainLayout from "../components/layout/MainLayout";
 
@@ -12,13 +12,9 @@ import {
 } from "../services/sessionService";
 
 function LearningTimePage() {
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState(() => getLearningSessions());
 
   const [showManualForm, setShowManualForm] = useState(false);
-
-  useEffect(() => {
-    setSessions(getLearningSessions());
-  }, []);
 
   function handleSaveSession(session) {
     const updatedSessions = [...sessions, session];

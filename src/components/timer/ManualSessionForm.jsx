@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { getGoals } from "../../services/goalService";
 
 import { calculateMinutesBetween, getTodayDate } from "../../utils/timerUtils";
 
 function ManualSessionForm({ onSave, onClose }) {
-  const [goals, setGoals] = useState([]);
+  const [goals] = useState(() => getGoals());
 
   const [date, setDate] = useState(getTodayDate());
 
@@ -14,10 +14,6 @@ function ManualSessionForm({ onSave, onClose }) {
   const [endTime, setEndTime] = useState("");
 
   const [goal, setGoal] = useState("");
-
-  useEffect(() => {
-    setGoals(getGoals());
-  }, []);
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -31,7 +27,7 @@ function ManualSessionForm({ onSave, onClose }) {
     const durationMinutes = calculateMinutesBetween(startTime, endTime);
 
     if (durationMinutes <= 0) {
-      alert("Die Endzeit muss nach der Startzeit liegen.");
+      alert("Ihre eingegebenen Zeiten sind ungültig.");
 
       return;
     }

@@ -7,27 +7,47 @@ import {
   saveLearningSessions,
 } from "../../services/sessionService";
 
-import { formatSecondsToHHMMSS, getTodayDate } from "../../utils/timerUtils";
+import {
+  clearActiveStopwatch,
+  getActiveStopwatch,
+  saveActiveStopwatch,
+} from "../../services/stopwatchService";
+
+import {
+  formatSecondsToHHMMSS,
+  getCurrentTime,
+  getTodayDate,
+} from "../../utils/timerUtils";
 
 function Stopwatch({ onSessionSaved }) {
-  const [goals, setGoals] = useState([]);
+  const [goals] = useState(() => getGoals());
 
-  const [selectedGoal, setSelectedGoal] = useState("");
+  const [selectedGoal, setSelectedGoal] = useState(
+    () => getActiveStopwatch()?.goal || ""
+  );
 
-  const [seconds, setSeconds] = useState(0);
+  const [seconds, setSeconds] = useState(() => {
+    const activeStopwatch = getActiveStopwatch();
 
-  const [isRunning, setIsRunning] = useState(false);
+    return activeStopwatch ? getElapsedSeconds(activeStopwatch) : 0;
+  });
 
-  useEffect(() => {
-    setGoals(getGoals());
-  }, []);
+  const [isRunning, setIsRunning] = useState(() => {
+    const activeStopwatch = getActiveStopwatch();
+
+    return Boolean(activeStopwatch?.isRunning);
+  });
 
   useEffect(() => {
     let intervalId;
 
     if (isRunning) {
       intervalId = setInterval(() => {
-        setSeconds((previousSeconds) => previousSeconds + 1);
+        const activeStopwatch = getActiveStopwatch();
+
+        if (activeStopwatch) {
+          setSeconds(getElapsedSeconds(activeStopwatch));
+        }
       }, 1000);
     }
 
@@ -44,9 +64,47 @@ function Stopwatch({ onSessionSaved }) {
     }
 
     setIsRunning(true);
+
+    const activeStopwatch = getActiveStopwatch();
+
+    const stopwatchState = {
+      goal: selectedGoal,
+
+      startTimestamp: Date.now(),
+
+      accumulatedSeconds: activeStopwatch?.accumulatedSeconds || seconds,
+
+      isRunning: true,
+
+      startDate: activeStopwatch?.startDate || getTodayDate(),
+
+      startTime: activeStopwatch?.startTime || getCurrentTime(),
+    };
+
+    saveActiveStopwatch(stopwatchState);
   }
 
   function handlePause() {
+    const activeStopwatch = getActiveStopwatch();
+
+    const elapsedSeconds = activeStopwatch
+      ? getElapsedSeconds(activeStopwatch)
+      : seconds;
+
+    saveActiveStopwatch({
+      ...activeStopwatch,
+
+      goal: selectedGoal,
+
+      startTimestamp: null,
+
+      accumulatedSeconds: elapsedSeconds,
+
+      isRunning: false,
+    });
+
+    setSeconds(elapsedSeconds);
+
     setIsRunning(false);
   }
 
@@ -63,7 +121,13 @@ function Stopwatch({ onSessionSaved }) {
       return;
     }
 
-    const roundedMinutes = Math.floor(seconds / 60);
+    const activeStopwatch = getActiveStopwatch();
+
+    const totalSeconds = activeStopwatch
+      ? getElapsedSeconds(activeStopwatch)
+      : seconds;
+
+    const roundedMinutes = Math.floor(totalSeconds / 60);
 
     if (roundedMinutes === 0) {
       alert("Die Lernsession ist kürzer als eine Minute und wird nicht gespeichert.");
@@ -72,15 +136,21 @@ function Stopwatch({ onSessionSaved }) {
 
       setIsRunning(false);
 
+      clearActiveStopwatch();
+
       return;
     }
 
     const newSession = {
       id: Date.now(),
 
-      date: getTodayDate(),
+      date: activeStopwatch?.startDate || getTodayDate(),
 
       goal: selectedGoal,
+
+      startTime: activeStopwatch?.startTime || "",
+
+      endTime: getCurrentTime(),
 
       durationMinutes: roundedMinutes,
 
@@ -101,6 +171,8 @@ function Stopwatch({ onSessionSaved }) {
 
     setSelectedGoal("");
 
+    clearActiveStopwatch();
+
     if (onSessionSaved) {
       onSessionSaved(updatedSessions);
     }
@@ -110,6 +182,10 @@ function Stopwatch({ onSessionSaved }) {
     setSeconds(0);
 
     setIsRunning(false);
+
+    setSelectedGoal("");
+
+    clearActiveStopwatch();
   }
 
   return (
@@ -137,6 +213,12 @@ function Stopwatch({ onSessionSaved }) {
         ))}
       </select>
 
+      {goals.length === 0 && (
+        <p className="helper-text">
+          Noch keine Lernziele vorhanden. Bitte erstelle zuerst ein Lernziel.
+        </p>
+      )}
+
       <div className="timer-actions">
         {!isRunning ? (
           <button className="primary-btn" onClick={handleStart}>
@@ -157,6 +239,19 @@ function Stopwatch({ onSessionSaved }) {
         </button>
       </div>
     </div>
+  );
+}
+
+function getElapsedSeconds(stopwatch) {
+  const accumulatedSeconds = Number(stopwatch.accumulatedSeconds || 0);
+
+  if (!stopwatch.isRunning || !stopwatch.startTimestamp) {
+    return accumulatedSeconds;
+  }
+
+  return (
+    accumulatedSeconds +
+    Math.floor((Date.now() - Number(stopwatch.startTimestamp)) / 1000)
   );
 }
 

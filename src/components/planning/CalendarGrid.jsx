@@ -1,6 +1,16 @@
-import { formatDateKey, getDaysInMonth } from "../../utils/dateUtils";
+import {
+  formatDateKey,
+  getDaysInMonth,
+  isAllowedDailyPlanDate,
+} from "../../utils/dateUtils";
 
-function CalendarGrid({ currentMonth, dailyPlans, onDayClick, onDeletePlan }) {
+function CalendarGrid({
+  currentMonth,
+  dailyPlans,
+  onDayClick,
+  onDeletePlan,
+  onEditPlan,
+}) {
   const year = currentMonth.getFullYear();
 
   const month = currentMonth.getMonth();
@@ -16,12 +26,20 @@ function CalendarGrid({ currentMonth, dailyPlans, onDayClick, onDeletePlan }) {
 
         const currentPlans = dailyPlans.filter((plan) => plan.date === dateKey);
 
+        const canCreatePlan = isAllowedDailyPlanDate(dateKey);
+
         return (
           <div key={dateKey} className="calendar-day">
             <div className="calendar-day-top">
               <span>{day}</span>
 
-              <button onClick={() => onDayClick(dateKey)}>+</button>
+              <button
+                disabled={!canCreatePlan}
+                className={!canCreatePlan ? "disabled-day-action" : ""}
+                onClick={() => onDayClick(dateKey)}
+              >
+                +
+              </button>
             </div>
 
             <div className="calendar-plans">
@@ -35,12 +53,21 @@ function CalendarGrid({ currentMonth, dailyPlans, onDayClick, onDeletePlan }) {
                     <p>{plan.goal}</p>
                   </div>
 
-                  <button
-                    className="calendar-plan-delete"
-                    onClick={() => onDeletePlan(plan.id)}
-                  >
-                    ×
-                  </button>
+                  <div className="calendar-plan-actions">
+                    <button
+                      className="calendar-plan-edit"
+                      onClick={() => onEditPlan(plan)}
+                    >
+                      Bearbeiten
+                    </button>
+
+                    <button
+                      className="calendar-plan-delete"
+                      onClick={() => onDeletePlan(plan.id)}
+                    >
+                      ×
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>

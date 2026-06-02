@@ -1,14 +1,9 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import {
   Bar,
   BarChart,
   CartesianGrid,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  Cell,
   ResponsiveContainer,
   Tooltip,
   XAxis,
@@ -24,19 +19,11 @@ import { getLearningSessions } from "../services/sessionService";
 import { getMonthPlans } from "../services/planningService";
 
 function ProgressPage() {
-  const [goals, setGoals] = useState([]);
+  const [goals] = useState(() => getGoals());
 
-  const [sessions, setSessions] = useState([]);
+  const [sessions] = useState(() => getLearningSessions());
 
-  const [monthPlans, setMonthPlans] = useState([]);
-
-  useEffect(() => {
-    setGoals(getGoals());
-
-    setSessions(getLearningSessions());
-
-    setMonthPlans(getMonthPlans());
-  }, []);
+  const [monthPlans] = useState(() => getMonthPlans());
 
   const currentMonth = new Date().toISOString().slice(0, 7);
 
@@ -56,26 +43,13 @@ function ProgressPage() {
     },
   ];
 
-  const hoursPerGoalData = goals
-    .map((goal) => {
-      const totalMinutes = sessions
-        .filter((session) => session.goal === goal.title)
-        .reduce((sum, session) => sum + session.durationMinutes, 0);
-
-      return {
-        name: goal.title,
-        value: Number((totalMinutes / 60).toFixed(2)),
-      };
-    })
-    .filter((item) => item.value > 0);
+  const lastSixMonthsData = getLastSixMonthsData(sessions, monthPlans);
 
   const detailedGoalProgress = getDetailedGoalProgress(
     goals,
     sessions,
     monthPlans
   );
-
-  const lastSixMonthsData = getLastSixMonthsData(sessions, monthPlans);
 
   return (
     <MainLayout>
@@ -86,7 +60,12 @@ function ProgressPage() {
 
         <div className="progress-grid">
           <div className="chart-card">
-            <h2>Geplante Stunden vs. absolviert</h2>
+            <h2>Monatsvergleich</h2>
+
+            <p className="progress-summary">
+              Geplant: {Number(plannedHoursThisMonth.toFixed(2))} h | Gelernt:{" "}
+              {Number(completedHoursThisMonth.toFixed(2))} h
+            </p>
 
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={plannedVsCompletedData}>
@@ -106,95 +85,10 @@ function ProgressPage() {
           </div>
 
           <div className="chart-card">
-            <h2>Investierte Stunden pro Ziel</h2>
+            <h2>Letzte 6 Monate</h2>
 
-            {hoursPerGoalData.length === 0 ? (
-              <p>Noch keine Lernzeiten für Ziele vorhanden.</p>
-            ) : (
-              <ResponsiveContainer width="100%" height={300}>
-                <PieChart>
-                  <Pie
-                    data={hoursPerGoalData}
-                    dataKey="value"
-                    nameKey="name"
-                    outerRadius={100}
-                    label
-                  >
-                    {hoursPerGoalData.map((entry, index) => (
-                      <Cell key={entry.name} fill={getChartColor(index)} />
-                    ))}
-                  </Pie>
-
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
-            )}
-          </div>
-
-          <div className="chart-card chart-wide">
-            <h2>Fortschritt pro Lernziel detailliert</h2>
-
-            {detailedGoalProgress.length === 0 ? (
-              <p>Noch keine Lernziele vorhanden.</p>
-            ) : (
-              <>
-                <ResponsiveContainer width="100%" height={320}>
-                  <BarChart data={detailedGoalProgress}>
-                    <CartesianGrid strokeDasharray="3 3" />
-
-                    <XAxis dataKey="name" />
-
-                    <YAxis />
-
-                    <Tooltip />
-
-                    <Bar dataKey="geplant" fill="#00b0f0" />
-
-                    <Bar dataKey="tatsächlich" fill="#4caf50" />
-                  </BarChart>
-                </ResponsiveContainer>
-
-                <div className="goal-progress-table-wrapper">
-                  <table className="goal-progress-table">
-                    <thead>
-                      <tr>
-                        <th>Ziel</th>
-                        <th>Fällig</th>
-                        <th>Geplant</th>
-                        <th>Gelernt</th>
-                        <th>Fortschritt</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-
-                    <tbody>
-                      {detailedGoalProgress.map((goal) => (
-                        <tr key={goal.name}>
-                          <td>{goal.name}</td>
-
-                          <td>{goal.dueDate}</td>
-
-                          <td>{goal.geplant} h</td>
-
-                          <td>{goal.tatsächlich} h</td>
-
-                          <td>{goal.progress}%</td>
-
-                          <td>{goal.status}</td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </>
-            )}
-          </div>
-
-          <div className="chart-card chart-wide">
-            <h2>Geplante vs. tatsächliche Stunden in den letzten 6 Monaten</h2>
-
-            <ResponsiveContainer width="100%" height={320}>
-              <LineChart data={lastSixMonthsData}>
+            <ResponsiveContainer width="100%" height={300}>
+              <BarChart data={lastSixMonthsData}>
                 <CartesianGrid strokeDasharray="3 3" />
 
                 <XAxis dataKey="month" />
@@ -203,11 +97,53 @@ function ProgressPage() {
 
                 <Tooltip />
 
-                <Line type="monotone" dataKey="geplant" stroke="#00b0f0" />
+                <Bar dataKey="geplant" fill="#00b0f0" />
 
-                <Line type="monotone" dataKey="tatsächlich" stroke="#4caf50" />
-              </LineChart>
+                <Bar dataKey="gelernt" fill="#4caf50" />
+              </BarChart>
             </ResponsiveContainer>
+          </div>
+
+          <div className="chart-card chart-wide">
+            <h2>Fortschritt pro Lernziel</h2>
+
+            {detailedGoalProgress.length === 0 ? (
+              <p>Noch keine Lernziele vorhanden.</p>
+            ) : (
+              <div className="goal-progress-list">
+                {detailedGoalProgress.map((goal) => (
+                  <div key={goal.name} className="goal-progress-card">
+                    <div className="goal-progress-header">
+                      <div>
+                        <h3>{goal.name}</h3>
+
+                        <small>Fällig: {goal.dueDate}</small>
+                      </div>
+
+                      <span className={`status-pill ${goal.statusClass}`}>
+                        {goal.status}
+                      </span>
+                    </div>
+
+                    <p>
+                      Geplant: {goal.geplant} h | Gelernt: {goal.tatsächlich} h
+                      | Fortschritt: {goal.progress}%
+                    </p>
+
+                    <div className="progress-bar">
+                      <div
+                        className="progress-bar-fill"
+                        style={{ width: `${goal.progress}%` }}
+                      />
+                    </div>
+
+                    {goal.geplant === 0 && (
+                      <small className="helper-text">0 h geplant</small>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -240,6 +176,8 @@ function getDetailedGoalProgress(goals, sessions, monthPlans) {
       progress: Number(progress.toFixed(0)),
 
       status: getGoalStatus(goal),
+
+      statusClass: getGoalStatusClass(goal),
     };
   });
 }
@@ -276,6 +214,18 @@ function getGoalStatus(goal) {
   return "Offen";
 }
 
+function getGoalStatusClass(goal) {
+  if (goal.completed) {
+    return "status-completed";
+  }
+
+  if (new Date(goal.dueDate) < new Date()) {
+    return "status-overdue";
+  }
+
+  return "status-open";
+}
+
 function getLastSixMonthsData(sessions, monthPlans) {
   const result = [];
 
@@ -284,7 +234,9 @@ function getLastSixMonthsData(sessions, monthPlans) {
   for (let index = 5; index >= 0; index -= 1) {
     const date = new Date(today.getFullYear(), today.getMonth() - index, 1);
 
-    const monthKey = date.toISOString().slice(0, 7);
+    const monthKey = `${date.getFullYear()}-${String(
+      date.getMonth() + 1
+    ).padStart(2, "0")}`;
 
     const label = date.toLocaleDateString("de-DE", {
       month: "short",
@@ -295,32 +247,18 @@ function getLastSixMonthsData(sessions, monthPlans) {
       .filter((plan) => plan.month === monthKey)
       .reduce((sum, plan) => sum + Number(plan.hours || 0), 0);
 
-    const completedHours = sessions
+    const learnedHours = sessions
       .filter((session) => session.date.startsWith(monthKey))
       .reduce((sum, session) => sum + session.durationMinutes / 60, 0);
 
     result.push({
       month: label,
       geplant: Number(plannedHours.toFixed(2)),
-      tatsächlich: Number(completedHours.toFixed(2)),
+      gelernt: Number(learnedHours.toFixed(2)),
     });
   }
 
   return result;
-}
-
-function getChartColor(index) {
-  const colors = [
-    "#00b0f0",
-    "#4caf50",
-    "#f59e0b",
-    "#ef4444",
-    "#8b5cf6",
-    "#14b8a6",
-    "#f97316",
-  ];
-
-  return colors[index % colors.length];
 }
 
 export default ProgressPage;

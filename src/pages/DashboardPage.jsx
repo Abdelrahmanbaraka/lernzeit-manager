@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { useNavigate } from "react-router-dom";
 
@@ -21,19 +21,11 @@ function DashboardPage() {
 
   const user = getCurrentUser();
 
-  const [goals, setGoals] = useState([]);
+  const [goals] = useState(() => getGoals());
 
-  const [sessions, setSessions] = useState([]);
+  const [sessions, setSessions] = useState(() => getLearningSessions());
 
-  const [monthPlans, setMonthPlans] = useState([]);
-
-  useEffect(() => {
-    setGoals(getGoals());
-
-    setSessions(getLearningSessions());
-
-    setMonthPlans(getMonthPlans());
-  }, []);
+  const [monthPlans] = useState(() => getMonthPlans());
 
   function handleSessionSaved(updatedSessions) {
     setSessions(updatedSessions);
@@ -59,11 +51,13 @@ function DashboardPage() {
 
   const todayMinutes = todayLearningMinutes % 60;
 
+  const displayUsername = capitalizeFirstLetter(user?.username || "");
+
   return (
     <MainLayout>
       <div className="page-container">
         <div className="dashboard-header">
-          <h1>Willkommen, {user?.username}</h1>
+          <h1>Willkommen, {displayUsername}</h1>
 
           <p>Verfolge deine Lernzeiten und Ziele.</p>
         </div>
@@ -110,6 +104,10 @@ function DashboardPage() {
 
               <button onClick={() => navigate("/goals")}>Ziele öffnen</button>
 
+              <button onClick={() => navigate("/goals")}>
+                Lernziel erstellen
+              </button>
+
               <button onClick={() => navigate("/planning")}>
                 Planung öffnen
               </button>
@@ -119,6 +117,14 @@ function DashboardPage() {
       </div>
     </MainLayout>
   );
+}
+
+function capitalizeFirstLetter(value) {
+  if (!value) {
+    return "";
+  }
+
+  return value.charAt(0).toUpperCase() + value.slice(1);
 }
 
 export default DashboardPage;

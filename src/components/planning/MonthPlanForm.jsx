@@ -1,13 +1,27 @@
 import { useState } from "react";
 
-import { getMonthInputValue } from "../../utils/dateUtils";
+import {
+  getAllowedMonthOptions,
+  getMonthInputValue,
+  isAllowedMonth,
+} from "../../utils/dateUtils";
 
-function MonthPlanForm({ goals, currentMonth, onSave, onClose }) {
-  const [month, setMonth] = useState(getMonthInputValue(currentMonth));
+function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
+  const allowedMonths = getAllowedMonthOptions();
 
-  const [hours, setHours] = useState("");
+  const currentMonthValue = getMonthInputValue(currentMonth);
 
-  const [selectedGoals, setSelectedGoals] = useState([]);
+  const initialMonth =
+    existingPlan?.month ||
+    (isAllowedMonth(currentMonthValue)
+      ? currentMonthValue
+      : allowedMonths[0]?.value || "");
+
+  const [month, setMonth] = useState(initialMonth);
+
+  const [hours, setHours] = useState(existingPlan?.hours || "");
+
+  const [selectedGoals, setSelectedGoals] = useState(existingPlan?.goals || []);
 
   function handleGoalSelect(goalTitle) {
     if (selectedGoals.includes(goalTitle)) {
@@ -35,7 +49,7 @@ function MonthPlanForm({ goals, currentMonth, onSave, onClose }) {
     }
 
     onSave({
-      id: Date.now(),
+      id: existingPlan?.id || Date.now(),
 
       month,
 
@@ -50,14 +64,19 @@ function MonthPlanForm({ goals, currentMonth, onSave, onClose }) {
   return (
     <div className="modal-overlay">
       <div className="goal-modal">
-        <h2>Monat planen</h2>
+        <h2>{existingPlan ? "Monatsplan bearbeiten" : "Monat planen"}</h2>
 
         <form onSubmit={handleSubmit}>
-          <input
-            type="month"
+          <select
             value={month}
             onChange={(event) => setMonth(event.target.value)}
-          />
+          >
+            {allowedMonths.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
 
           <input
             type="number"

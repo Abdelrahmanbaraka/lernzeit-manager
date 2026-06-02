@@ -1,31 +1,47 @@
 import { useState } from "react";
 
-function DailyPlanForm({ goals, selectedDate, onSave, onClose }) {
-  const [startTime, setStartTime] = useState("");
+import { getDailyPlanDateRange } from "../../utils/dateUtils";
 
-  const [endTime, setEndTime] = useState("");
+import { getTodayDate } from "../../utils/timerUtils";
 
-  const [goal, setGoal] = useState("");
+function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
+  const dateRange = getDailyPlanDateRange();
+
+  const fixedDate = selectedDate || existingPlan?.date || "";
+
+  const [date, setDate] = useState(fixedDate || getTodayDate());
+
+  const [startTime, setStartTime] = useState(existingPlan?.startTime || "");
+
+  const [endTime, setEndTime] = useState(existingPlan?.endTime || "");
+
+  const [goal, setGoal] = useState(existingPlan?.goal || "");
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!startTime || !endTime || !goal) {
+    if (!date || !startTime || !endTime || !goal) {
       alert("Bitte alle Felder ausfüllen.");
 
       return;
     }
 
     if (endTime <= startTime) {
-      alert("Die Endzeit muss nach der Startzeit liegen.");
+      alert("Ihre eingegebenen Zeiten sind ungültig.");
+
+      return;
+    }
+
+    if (!existingPlan && (date < dateRange.min || date > dateRange.max)) {
+      alert("Tagesplanung ist nur für die nächsten 30 Tage möglich.");
 
       return;
     }
 
     onSave({
-      id: Date.now(),
+      id: existingPlan?.id || Date.now(),
 
-      date: selectedDate,
+      date,
 
       startTime,
 
@@ -40,11 +56,25 @@ function DailyPlanForm({ goals, selectedDate, onSave, onClose }) {
   return (
     <div className="modal-overlay">
       <div className="goal-modal">
-        <h2>Tagesplanung</h2>
+        <h2>{existingPlan ? "Tagesplanung bearbeiten" : "Tagesplanung"}</h2>
 
-        <p className="modal-hint">Datum: {selectedDate}</p>
+        {fixedDate ? (
+          <p className="modal-hint">Datum: {fixedDate}</p>
+        ) : (
+          <p className="modal-hint">Datum innerhalb der nächsten 30 Tage wählen.</p>
+        )}
 
         <form onSubmit={handleSubmit}>
+          {!fixedDate && (
+            <input
+              type="date"
+              min={dateRange.min}
+              max={dateRange.max}
+              value={date}
+              onChange={(event) => setDate(event.target.value)}
+            />
+          )}
+
           <input
             type="time"
             value={startTime}

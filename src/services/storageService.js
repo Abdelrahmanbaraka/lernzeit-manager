@@ -48,6 +48,28 @@ export function saveData(key, data) {
   localStorage.setItem(scopedKey, JSON.stringify(data));
 }
 
+export function getStoredValue(key, fallbackValue = null) {
+  const scopedKey = getUserScopedKey(key);
+
+  const data = localStorage.getItem(scopedKey);
+
+  if (!data) {
+    return fallbackValue;
+  }
+
+  try {
+    return JSON.parse(data);
+  } catch {
+    return fallbackValue;
+  }
+}
+
+export function saveStoredValue(key, data) {
+  const scopedKey = getUserScopedKey(key);
+
+  localStorage.setItem(scopedKey, JSON.stringify(data));
+}
+
 export function removeData(key) {
   const scopedKey = getUserScopedKey(key);
 

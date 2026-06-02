@@ -21,8 +21,6 @@ export function saveDailyPlans(plans) {
 export function removeGoalFromPlans(goalTitle) {
   const monthPlans = getMonthPlans();
 
-  const dailyPlans = getDailyPlans();
-
   const updatedMonthPlans = monthPlans
     .map((plan) => {
       return {
@@ -32,9 +30,5 @@ export function removeGoalFromPlans(goalTitle) {
     })
     .filter((plan) => plan.goals.length > 0);
 
-  const updatedDailyPlans = dailyPlans.filter((plan) => plan.goal !== goalTitle);
-
   saveMonthPlans(updatedMonthPlans);
-
-  saveDailyPlans(updatedDailyPlans);
 }

@@ -25,13 +25,13 @@ import {
 } from "../utils/dateUtils";
 
 function PlanningPage() {
-  const [goals, setGoals] = useState([]);
+  const [goals] = useState(() => getGoals());
 
-  const [monthPlans, setMonthPlans] = useState([]);
+  const [monthPlans, setMonthPlans] = useState(() => getMonthPlans());
 
-  const [dailyPlans, setDailyPlans] = useState([]);
+  const [dailyPlans, setDailyPlans] = useState(() => getDailyPlans());
 
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoaded] = useState(true);
 
   const [currentMonth, setCurrentMonth] = useState(new Date());
 
@@ -41,15 +41,9 @@ function PlanningPage() {
 
   const [selectedDate, setSelectedDate] = useState(null);
 
-  useEffect(() => {
-    setGoals(getGoals());
+  const [editingMonthPlan, setEditingMonthPlan] = useState(null);
 
-    setMonthPlans(getMonthPlans());
-
-    setDailyPlans(getDailyPlans());
-
-    setIsLoaded(true);
-  }, []);
+  const [editingDailyPlan, setEditingDailyPlan] = useState(null);
 
   useEffect(() => {
     if (isLoaded) {
@@ -64,13 +58,27 @@ function PlanningPage() {
   }, [dailyPlans, isLoaded]);
 
   function handleMonthSave(plan) {
-    const updatedPlans = monthPlans.filter((item) => item.month !== plan.month);
+    const updatedPlans = monthPlans.filter(
+      (item) => item.id !== plan.id && item.month !== plan.month
+    );
 
     setMonthPlans([...updatedPlans, plan]);
   }
 
   function handleDailySave(plan) {
-    setDailyPlans([...dailyPlans, plan]);
+    const updatedPlans = dailyPlans.filter((item) => item.id !== plan.id);
+
+    setDailyPlans([...updatedPlans, plan]);
+  }
+
+  function handleDeleteMonthPlan(id) {
+    const confirmed = window.confirm("Monatsplanung wirklich löschen?");
+
+    if (!confirmed) {
+      return;
+    }
+
+    setMonthPlans(monthPlans.filter((plan) => plan.id !== id));
   }
 
   function handleDeleteDailyPlan(id) {
@@ -88,7 +96,45 @@ function PlanningPage() {
   function handleDayClick(dateKey) {
     setSelectedDate(dateKey);
 
+    setEditingDailyPlan(null);
+
     setShowDailyModal(true);
+  }
+
+  function handleOpenDailyForm() {
+    setSelectedDate(null);
+
+    setEditingDailyPlan(null);
+
+    setShowDailyModal(true);
+  }
+
+  function handleEditMonthPlan(plan) {
+    setEditingMonthPlan(plan);
+
+    setShowMonthModal(true);
+  }
+
+  function handleEditDailyPlan(plan) {
+    setSelectedDate(plan.date);
+
+    setEditingDailyPlan(plan);
+
+    setShowDailyModal(true);
+  }
+
+  function handleCloseMonthModal() {
+    setShowMonthModal(false);
+
+    setEditingMonthPlan(null);
+  }
+
+  function handleCloseDailyModal() {
+    setShowDailyModal(false);
+
+    setSelectedDate(null);
+
+    setEditingDailyPlan(null);
   }
 
   const selectedMonthValue = getMonthInputValue(currentMonth);
@@ -102,10 +148,6 @@ function PlanningPage() {
       <div className="page-container">
         <div className="page-header">
           <h1>Lernplan</h1>
-
-          <button className="primary-btn" onClick={() => setShowMonthModal(true)}>
-            Monat planen
-          </button>
         </div>
 
         <div className="month-navigation">
@@ -120,6 +162,23 @@ function PlanningPage() {
           </button>
         </div>
 
+        <div className="planning-action-bar">
+          <button
+            className="primary-btn"
+            onClick={() => {
+              setEditingMonthPlan(null);
+
+              setShowMonthModal(true);
+            }}
+          >
+            Monat planen
+          </button>
+
+          <button className="primary-btn" onClick={handleOpenDailyForm}>
+            Tagesplan erstellen
+          </button>
+        </div>
+
         <div className="planning-layout">
           <div className="calendar-section">
             <CalendarGrid
@@ -127,6 +186,7 @@ function PlanningPage() {
               dailyPlans={dailyPlans}
               onDayClick={handleDayClick}
               onDeletePlan={handleDeleteDailyPlan}
+              onEditPlan={handleEditDailyPlan}
             />
           </div>
 
@@ -147,6 +207,19 @@ function PlanningPage() {
                       <li key={index}>{goal}</li>
                     ))}
                   </ul>
+
+                  <div className="month-plan-actions">
+                    <button onClick={() => handleEditMonthPlan(plan)}>
+                      Bearbeiten
+                    </button>
+
+                    <button
+                      className="delete-btn"
+                      onClick={() => handleDeleteMonthPlan(plan.id)}
+                    >
+                      Löschen
+                    </button>
+                  </div>
                 </div>
               ))
             )}
@@ -157,8 +230,9 @@ function PlanningPage() {
           <MonthPlanForm
             goals={goals}
             currentMonth={currentMonth}
+            existingPlan={editingMonthPlan}
             onSave={handleMonthSave}
-            onClose={() => setShowMonthModal(false)}
+            onClose={handleCloseMonthModal}
           />
         )}
 
@@ -166,8 +240,9 @@ function PlanningPage() {
           <DailyPlanForm
             goals={goals}
             selectedDate={selectedDate}
+            existingPlan={editingDailyPlan}
             onSave={handleDailySave}
-            onClose={() => setShowDailyModal(false)}
+            onClose={handleCloseDailyModal}
           />
         )}
       </div>
