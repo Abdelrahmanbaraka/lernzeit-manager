@@ -1,8 +1,12 @@
 import { useState } from "react";
 
-import { getDailyPlanDateRange } from "../../utils/dateUtils";
+import {
+  formatDisplayDate,
+  getDailyPlanDateRange,
+  isStartTimeInPast,
+} from "../../utils/dateUtils";
 
-import { getTodayDate } from "../../utils/timerUtils";
+import { getCurrentTime, getTodayDate } from "../../utils/timerUtils";
 
 function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
   const dateRange = getDailyPlanDateRange();
@@ -28,6 +32,12 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
 
     if (endTime <= startTime) {
       alert("Ihre eingegebenen Zeiten sind ungültig.");
+
+      return;
+    }
+
+    if (isStartTimeInPast(date, startTime)) {
+      alert("Die Startzeit darf nicht in der Vergangenheit liegen.");
 
       return;
     }
@@ -59,12 +69,12 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
         <h2>{existingPlan ? "Tagesplanung bearbeiten" : "Tagesplanung"}</h2>
 
         {fixedDate ? (
-          <p className="modal-hint">Datum: {fixedDate}</p>
+          <p className="modal-hint">Datum: {formatDisplayDate(fixedDate)}</p>
         ) : (
           <p className="modal-hint">Datum innerhalb der nächsten 30 Tage wählen.</p>
         )}
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           {!fixedDate && (
             <input
               type="date"
@@ -77,6 +87,7 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
 
           <input
             type="time"
+            min={date === dateRange.min ? getCurrentTime() : undefined}
             value={startTime}
             onChange={(event) => setStartTime(event.target.value)}
           />

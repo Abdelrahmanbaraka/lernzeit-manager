@@ -1,5 +1,7 @@
 import { formatMinutesToHHMM } from "../../utils/timerUtils";
 
+import { formatDisplayDate } from "../../utils/dateUtils";
+
 function SessionList({ sessions, onDelete }) {
   if (sessions.length === 0) {
     return (
@@ -18,7 +20,7 @@ function SessionList({ sessions, onDelete }) {
               {session.emoji} {session.goal}
             </h3>
 
-            <p>Datum: {session.date}</p>
+            <p>Datum: {formatDisplayDate(session.date)}</p>
 
             {session.startTime && session.endTime && (
               <small>

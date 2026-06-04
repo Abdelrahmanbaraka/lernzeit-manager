@@ -18,6 +18,8 @@ import { getLearningSessions } from "../services/sessionService";
 
 import { getMonthPlans } from "../services/planningService";
 
+import { formatDisplayDate } from "../utils/dateUtils";
+
 function ProgressPage() {
   const [goals] = useState(() => getGoals());
 
@@ -117,7 +119,7 @@ function ProgressPage() {
                       <div>
                         <h3>{goal.name}</h3>
 
-                        <small>Fällig: {goal.dueDate}</small>
+                        <small>Fällig: {formatDisplayDate(goal.dueDate)}</small>
                       </div>
 
                       <span className={`status-pill ${goal.statusClass}`}>

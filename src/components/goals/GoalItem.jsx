@@ -1,5 +1,7 @@
 import { FaCog, FaTrash } from "react-icons/fa";
 
+import { formatDisplayDate } from "../../utils/dateUtils";
+
 function GoalItem({
   goal,
   onDelete,
@@ -37,7 +39,7 @@ function GoalItem({
           <p>{goal.description}</p>
 
           <small>
-            Fällig: {goal.dueDate}
+            Fällig: {formatDisplayDate(goal.dueDate)}
           </small>
         </div>
       </div>

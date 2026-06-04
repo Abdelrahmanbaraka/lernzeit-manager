@@ -18,6 +18,7 @@ import {
 } from "../services/planningService";
 
 import {
+  formatGermanMonth,
   getMonthName,
   getMonthInputValue,
   getNextMonth,
@@ -198,7 +199,7 @@ function PlanningPage() {
             ) : (
               currentMonthPlans.map((plan) => (
                 <div key={plan.id} className="month-plan-card">
-                  <h3>{plan.month}</h3>
+                  <h3>{formatGermanMonth(plan.month)}</h3>
 
                   <p>Geplante Stunden: {plan.hours}</p>
 

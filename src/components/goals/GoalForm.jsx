@@ -69,13 +69,21 @@ function GoalForm({
             }
           />
 
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) =>
-              setDueDate(e.target.value)
-            }
-          />
+          <label className="form-field">
+            <span>Fälligkeitsdatum</span>
+
+            <input
+              type="date"
+              value={dueDate}
+              onChange={(e) =>
+                setDueDate(e.target.value)
+              }
+            />
+
+            <small className="helper-text">
+              Bis zu diesem Datum soll das Lernziel erledigt sein.
+            </small>
+          </label>
 
           <div className="modal-actions">
             <button type="submit">

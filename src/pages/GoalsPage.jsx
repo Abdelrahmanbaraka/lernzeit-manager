@@ -108,6 +108,20 @@ function GoalsPage() {
           </div>
         ) : (
           <>
+            <div className="goal-status-legend" aria-label="Legende Zielstatus">
+              <span>
+                <span aria-hidden="true">🟢</span> Erledigt
+              </span>
+
+              <span>
+                <span aria-hidden="true">🟡</span> Offen
+              </span>
+
+              <span>
+                <span aria-hidden="true">🔴</span> Überfällig
+              </span>
+            </div>
+
             <section className="goals-section">
               <h2>Aktive Lernziele</h2>
 

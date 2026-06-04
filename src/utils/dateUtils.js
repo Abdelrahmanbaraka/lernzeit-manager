@@ -75,6 +75,20 @@ export function formatDateFromDate(date) {
   return `${year}-${month}-${day}`;
 }
 
+export function formatDisplayDate(dateKey) {
+  if (!dateKey) {
+    return "";
+  }
+
+  const [year, month, day] = dateKey.split("-");
+
+  if (!year || !month || !day) {
+    return dateKey;
+  }
+
+  return `${day}.${month}.${year}`;
+}
+
 export function getDailyPlanDateRange() {
   const today = new Date();
 
@@ -88,6 +102,30 @@ export function isAllowedDailyPlanDate(dateKey) {
   const { min, max } = getDailyPlanDateRange();
 
   return dateKey >= min && dateKey <= max;
+}
+
+export function isStartTimeInPast(dateKey, startTime) {
+  if (!dateKey || !startTime) {
+    return false;
+  }
+
+  const now = new Date();
+
+  const today = formatDateFromDate(now);
+
+  if (dateKey < today) {
+    return true;
+  }
+
+  if (dateKey > today) {
+    return false;
+  }
+
+  const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(
+    now.getMinutes()
+  ).padStart(2, "0")}`;
+
+  return startTime < currentTime;
 }
 
 export function getNextMonth(date) {
