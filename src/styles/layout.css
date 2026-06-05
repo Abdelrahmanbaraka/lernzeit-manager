@@ -609,6 +609,20 @@ button {
   gap: 0.5rem;
 }
 
+.goal-hours-row {
+  display: grid;
+
+  grid-template-columns: 1fr 140px;
+
+  gap: 0.75rem;
+
+  align-items: center;
+}
+
+.goal-hours-row input[type="number"] {
+  width: 100%;
+}
+
 .login-error {
   color: red;
 

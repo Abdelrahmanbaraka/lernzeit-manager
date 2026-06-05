@@ -6,6 +6,11 @@ import {
   isAllowedMonth,
 } from "../../utils/dateUtils";
 
+import {
+  getMonthPlanGoalEntries,
+  getMonthPlanTotalHours,
+} from "../../utils/monthPlanUtils";
+
 function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
   const allowedMonths = getAllowedMonthOptions();
 
@@ -19,13 +24,15 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
 
   const [month, setMonth] = useState(initialMonth);
 
-  const [hours, setHours] = useState(existingPlan?.hours || "");
+  const [selectedGoals, setSelectedGoals] = useState(() =>
+    existingPlan ? getMonthPlanGoalEntries(existingPlan, goals) : []
+  );
 
-  const [selectedGoals, setSelectedGoals] = useState(existingPlan?.goals || []);
-
-  function handleGoalSelect(goalTitle) {
-    if (selectedGoals.includes(goalTitle)) {
-      setSelectedGoals(selectedGoals.filter((goal) => goal !== goalTitle));
+  function handleGoalSelect(goal) {
+    if (selectedGoals.some((goalPlan) => goalPlan.goalId === goal.id)) {
+      setSelectedGoals(
+        selectedGoals.filter((goalPlan) => goalPlan.goalId !== goal.id)
+      );
 
       return;
     }
@@ -36,26 +43,71 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
       return;
     }
 
-    setSelectedGoals([...selectedGoals, goalTitle]);
+    setSelectedGoals([
+      ...selectedGoals,
+      {
+        goalId: goal.id,
+
+        title: goal.title,
+
+        plannedHours: "",
+      },
+    ]);
+  }
+
+  function handleGoalHoursChange(goalId, plannedHours) {
+    setSelectedGoals(
+      selectedGoals.map((goalPlan) => {
+        if (goalPlan.goalId !== goalId) {
+          return goalPlan;
+        }
+
+        return {
+          ...goalPlan,
+
+          plannedHours,
+        };
+      })
+    );
   }
 
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!month || !hours || selectedGoals.length === 0) {
-      alert("Bitte Monat, Stunden und mindestens ein Ziel auswählen.");
+    if (!month || selectedGoals.length === 0) {
+      alert("Bitte Monat und mindestens ein Ziel auswählen.");
 
       return;
     }
 
-    onSave({
+    const hasInvalidHours = selectedGoals.some(
+      (goalPlan) => Number(goalPlan.plannedHours) <= 0
+    );
+
+    if (hasInvalidHours) {
+      alert("Bitte für jedes ausgewählte Ziel geplante Stunden eintragen.");
+
+      return;
+    }
+
+    const plan = {
       id: existingPlan?.id || Date.now(),
 
       month,
 
-      hours: Number(hours),
+      goals: selectedGoals.map((goalPlan) => ({
+        goalId: goalPlan.goalId,
 
-      goals: selectedGoals,
+        title: goalPlan.title,
+
+        plannedHours: Number(goalPlan.plannedHours),
+      })),
+    };
+
+    onSave({
+      ...plan,
+
+      hours: getMonthPlanTotalHours(plan),
     });
 
     onClose();
@@ -78,14 +130,6 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
             ))}
           </select>
 
-          <input
-            type="number"
-            min="1"
-            placeholder="Geplante Stunden"
-            value={hours}
-            onChange={(event) => setHours(event.target.value)}
-          />
-
           <div className="goal-selection">
             <h4>Ziele auswählen</h4>
 
@@ -93,15 +137,38 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
               <p>Bitte zuerst Lernziele erstellen.</p>
             ) : (
               goals.map((goal) => (
-                <label key={goal.id} className="checkbox-row">
-                  <input
-                    type="checkbox"
-                    checked={selectedGoals.includes(goal.title)}
-                    onChange={() => handleGoalSelect(goal.title)}
-                  />
+                <div key={goal.id} className="goal-hours-row">
+                  <label className="checkbox-row">
+                    <input
+                      type="checkbox"
+                      checked={selectedGoals.some(
+                        (goalPlan) => goalPlan.goalId === goal.id
+                      )}
+                      onChange={() => handleGoalSelect(goal)}
+                    />
 
-                  {goal.title}
-                </label>
+                    {goal.title}
+                  </label>
+
+                  {selectedGoals.some(
+                    (goalPlan) => goalPlan.goalId === goal.id
+                  ) && (
+                    <input
+                      type="number"
+                      min="0.25"
+                      step="0.25"
+                      placeholder="Stunden"
+                      value={
+                        selectedGoals.find(
+                          (goalPlan) => goalPlan.goalId === goal.id
+                        )?.plannedHours || ""
+                      }
+                      onChange={(event) =>
+                        handleGoalHoursChange(goal.id, event.target.value)
+                      }
+                    />
+                  )}
+                </div>
               ))
             )}
           </div>

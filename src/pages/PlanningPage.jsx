@@ -25,6 +25,11 @@ import {
   getPreviousMonth,
 } from "../utils/dateUtils";
 
+import {
+  getMonthPlanGoalEntries,
+  getMonthPlanTotalHours,
+} from "../utils/monthPlanUtils";
+
 function PlanningPage() {
   const [goals] = useState(() => getGoals());
 
@@ -201,12 +206,16 @@ function PlanningPage() {
                 <div key={plan.id} className="month-plan-card">
                   <h3>{formatGermanMonth(plan.month)}</h3>
 
-                  <p>Geplante Stunden: {plan.hours}</p>
+                  <p>Geplante Stunden: {getMonthPlanTotalHours(plan)}</p>
 
                   <ul>
-                    {plan.goals.map((goal, index) => (
-                      <li key={index}>{goal}</li>
-                    ))}
+                    {getMonthPlanGoalEntries(plan, goals).map(
+                      (goalPlan, index) => (
+                        <li key={goalPlan.goalId || goalPlan.title || index}>
+                          {goalPlan.title}: {Number(goalPlan.plannedHours || 0)} h
+                        </li>
+                      )
+                    )}
                   </ul>
 
                   <div className="month-plan-actions">

@@ -16,6 +16,8 @@ import { getMonthPlans } from "../services/planningService";
 
 import { getTodayDate } from "../utils/timerUtils";
 
+import { getMonthPlanTotalHours } from "../utils/monthPlanUtils";
+
 function DashboardPage() {
   const navigate = useNavigate();
 
@@ -45,7 +47,7 @@ function DashboardPage() {
 
   const plannedHours = monthPlans
     .filter((plan) => plan.month === currentMonth)
-    .reduce((sum, plan) => sum + Number(plan.hours || 0), 0);
+    .reduce((sum, plan) => sum + getMonthPlanTotalHours(plan), 0);
 
   const todayHours = Math.floor(todayLearningMinutes / 60);
 

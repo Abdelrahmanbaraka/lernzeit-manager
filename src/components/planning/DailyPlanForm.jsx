@@ -13,6 +13,8 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
 
   const fixedDate = selectedDate || existingPlan?.date || "";
 
+  const canEditDate = Boolean(existingPlan) || !fixedDate;
+
   const [date, setDate] = useState(fixedDate || getTodayDate());
 
   const [startTime, setStartTime] = useState(existingPlan?.startTime || "");
@@ -68,14 +70,14 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
       <div className="goal-modal">
         <h2>{existingPlan ? "Tagesplanung bearbeiten" : "Tagesplanung"}</h2>
 
-        {fixedDate ? (
+        {fixedDate && !canEditDate ? (
           <p className="modal-hint">Datum: {formatDisplayDate(fixedDate)}</p>
         ) : (
           <p className="modal-hint">Datum innerhalb der nächsten 30 Tage wählen.</p>
         )}
 
         <form onSubmit={handleSubmit} noValidate>
-          {!fixedDate && (
+          {canEditDate && (
             <input
               type="date"
               min={dateRange.min}

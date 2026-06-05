@@ -25,7 +25,13 @@ export function removeGoalFromPlans(goalTitle) {
     .map((plan) => {
       return {
         ...plan,
-        goals: plan.goals.filter((goal) => goal !== goalTitle),
+        goals: plan.goals.filter((goal) => {
+          if (typeof goal === "string") {
+            return goal !== goalTitle;
+          }
+
+          return goal.title !== goalTitle;
+        }),
       };
     })
     .filter((plan) => plan.goals.length > 0);
