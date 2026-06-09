@@ -16,12 +16,19 @@ import { getGoals } from "../services/goalService";
 
 import { getLearningSessions } from "../services/sessionService";
 
-import { getMonthPlans } from "../services/planningService";
-
-import { formatDisplayDate } from "../utils/dateUtils";
+import {
+  getDailyPlans,
+  getMonthPlans,
+} from "../services/planningService";
 
 import {
-  getMonthPlanTotalHours,
+  formatDisplayDate,
+  getGoalStatus,
+  getGoalStatusClass,
+} from "../utils/dateUtils";
+
+import {
+  getPlannedHoursForMonth,
   getPlannedHoursForGoal,
 } from "../utils/monthPlanUtils";
 
@@ -32,11 +39,15 @@ function ProgressPage() {
 
   const [monthPlans] = useState(() => getMonthPlans());
 
+  const [dailyPlans] = useState(() => getDailyPlans());
+
   const currentMonth = new Date().toISOString().slice(0, 7);
 
-  const plannedHoursThisMonth = monthPlans
-    .filter((plan) => plan.month === currentMonth)
-    .reduce((sum, plan) => sum + getMonthPlanTotalHours(plan), 0);
+  const plannedHoursThisMonth = getPlannedHoursForMonth(
+    monthPlans,
+    dailyPlans,
+    currentMonth
+  );
 
   const completedHoursThisMonth = sessions
     .filter((session) => session.date.startsWith(currentMonth))
@@ -50,12 +61,17 @@ function ProgressPage() {
     },
   ];
 
-  const lastSixMonthsData = getLastSixMonthsData(sessions, monthPlans);
+  const lastSixMonthsData = getLastSixMonthsData(
+    sessions,
+    monthPlans,
+    dailyPlans
+  );
 
   const detailedGoalProgress = getDetailedGoalProgress(
     goals,
     sessions,
-    monthPlans
+    monthPlans,
+    dailyPlans
   );
 
   return (
@@ -158,7 +174,7 @@ function ProgressPage() {
   );
 }
 
-function getDetailedGoalProgress(goals, sessions, monthPlans) {
+function getDetailedGoalProgress(goals, sessions, monthPlans, dailyPlans) {
   return goals.map((goal) => {
     const learnedMinutes = sessions
       .filter((session) => session.goal === goal.title)
@@ -166,7 +182,7 @@ function getDetailedGoalProgress(goals, sessions, monthPlans) {
 
     const learnedHours = learnedMinutes / 60;
 
-    const plannedHours = getPlannedHoursForGoal(goal, monthPlans);
+    const plannedHours = getPlannedHoursForGoal(goal, monthPlans, dailyPlans);
 
     const progress =
       plannedHours > 0 ? Math.min((learnedHours / plannedHours) * 100, 100) : 0;
@@ -189,35 +205,7 @@ function getDetailedGoalProgress(goals, sessions, monthPlans) {
   });
 }
 
-function getGoalStatus(goal) {
-  const today = new Date();
-
-  const dueDate = new Date(goal.dueDate);
-
-  if (goal.completed) {
-    return "Erledigt";
-  }
-
-  if (dueDate < today) {
-    return "Überfällig";
-  }
-
-  return "Offen";
-}
-
-function getGoalStatusClass(goal) {
-  if (goal.completed) {
-    return "status-completed";
-  }
-
-  if (new Date(goal.dueDate) < new Date()) {
-    return "status-overdue";
-  }
-
-  return "status-open";
-}
-
-function getLastSixMonthsData(sessions, monthPlans) {
+function getLastSixMonthsData(sessions, monthPlans, dailyPlans) {
   const result = [];
 
   const today = new Date();
@@ -234,9 +222,11 @@ function getLastSixMonthsData(sessions, monthPlans) {
       year: "2-digit",
     });
 
-    const plannedHours = monthPlans
-      .filter((plan) => plan.month === monthKey)
-      .reduce((sum, plan) => sum + getMonthPlanTotalHours(plan), 0);
+    const plannedHours = getPlannedHoursForMonth(
+      monthPlans,
+      dailyPlans,
+      monthKey
+    );
 
     const learnedHours = sessions
       .filter((session) => session.date.startsWith(monthKey))

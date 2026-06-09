@@ -612,7 +612,7 @@ button {
 .goal-hours-row {
   display: grid;
 
-  grid-template-columns: 1fr 140px;
+  grid-template-columns: 1fr 190px;
 
   gap: 0.75rem;
 
@@ -621,6 +621,17 @@ button {
 
 .goal-hours-row input[type="number"] {
   width: 100%;
+}
+
+.goal-hours-input-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.goal-hours-input-group span {
+  color: #475569;
+  font-size: 0.9rem;
 }
 
 .login-error {

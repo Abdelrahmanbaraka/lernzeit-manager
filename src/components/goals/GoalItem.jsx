@@ -1,6 +1,9 @@
 import { FaCog, FaTrash } from "react-icons/fa";
 
-import { formatDisplayDate } from "../../utils/dateUtils";
+import {
+  formatDisplayDate,
+  isDateBeforeToday,
+} from "../../utils/dateUtils";
 
 function GoalItem({
   goal,
@@ -9,7 +12,7 @@ function GoalItem({
   onEdit,
 }) {
   const isOverdue =
-    new Date(goal.dueDate) < new Date() &&
+    isDateBeforeToday(goal.dueDate) &&
     !goal.completed;
 
   function getStatusEmoji() {
@@ -36,7 +39,7 @@ function GoalItem({
         <div>
           <h3>{goal.title}</h3>
 
-          <p>{goal.description}</p>
+          {goal.description && <p>{goal.description}</p>}
 
           <small>
             Fällig: {formatDisplayDate(goal.dueDate)}

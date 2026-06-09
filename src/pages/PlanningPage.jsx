@@ -251,6 +251,7 @@ function PlanningPage() {
             goals={goals}
             selectedDate={selectedDate}
             existingPlan={editingDailyPlan}
+            existingPlans={dailyPlans}
             onSave={handleDailySave}
             onClose={handleCloseDailyModal}
           />

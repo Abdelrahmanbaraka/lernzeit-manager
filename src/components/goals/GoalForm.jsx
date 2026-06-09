@@ -20,7 +20,7 @@ function GoalForm({
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!title || !description || !dueDate) {
+    if (!title || !dueDate) {
       alert("Bitte alle Felder ausfüllen.");
 
       return;
@@ -31,7 +31,7 @@ function GoalForm({
 
       title,
 
-      description,
+      description: description.trim(),
 
       dueDate,
 

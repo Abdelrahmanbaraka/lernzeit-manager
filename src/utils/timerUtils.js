@@ -40,6 +40,42 @@ export function calculateMinutesBetween(startTime, endTime) {
   return difference > 0 ? difference : 0;
 }
 
+export function doTimeRangesOverlap(startTime, endTime, existingStart, existingEnd) {
+  const startMinutes = getTimeInMinutes(startTime);
+
+  const endMinutes = getTimeInMinutes(endTime);
+
+  const existingStartMinutes = getTimeInMinutes(existingStart);
+
+  const existingEndMinutes = getTimeInMinutes(existingEnd);
+
+  if (
+    startMinutes === null ||
+    endMinutes === null ||
+    existingStartMinutes === null ||
+    existingEndMinutes === null
+  ) {
+    return false;
+  }
+
+  return startMinutes < existingEndMinutes && endMinutes > existingStartMinutes;
+}
+
+export function hasOverlappingDailyPlan(newPlan, existingPlans) {
+  return existingPlans.some((plan) => {
+    if (plan.id === newPlan.id || plan.date !== newPlan.date) {
+      return false;
+    }
+
+    return doTimeRangesOverlap(
+      newPlan.startTime,
+      newPlan.endTime,
+      plan.startTime,
+      plan.endTime
+    );
+  });
+}
+
 export function getTodayDate() {
   const today = new Date();
 
@@ -60,4 +96,18 @@ export function getCurrentTime() {
   const minutes = String(now.getMinutes()).padStart(2, "0");
 
   return `${hours}:${minutes}`;
+}
+
+function getTimeInMinutes(time) {
+  if (!time) {
+    return null;
+  }
+
+  const [hours, minutes] = time.split(":").map(Number);
+
+  if (Number.isNaN(hours) || Number.isNaN(minutes)) {
+    return null;
+  }
+
+  return hours * 60 + minutes;
 }

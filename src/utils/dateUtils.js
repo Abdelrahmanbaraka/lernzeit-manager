@@ -89,6 +89,38 @@ export function formatDisplayDate(dateKey) {
   return `${day}.${month}.${year}`;
 }
 
+export function isDateBeforeToday(dateKey) {
+  if (!dateKey) {
+    return false;
+  }
+
+  return dateKey < formatDateFromDate(new Date());
+}
+
+export function getGoalStatus(goal) {
+  if (goal.completed) {
+    return "Erledigt";
+  }
+
+  if (isDateBeforeToday(goal.dueDate)) {
+    return "Überfällig";
+  }
+
+  return "Offen";
+}
+
+export function getGoalStatusClass(goal) {
+  if (goal.completed) {
+    return "status-completed";
+  }
+
+  if (isDateBeforeToday(goal.dueDate)) {
+    return "status-overdue";
+  }
+
+  return "status-open";
+}
+
 export function getDailyPlanDateRange() {
   const today = new Date();
 

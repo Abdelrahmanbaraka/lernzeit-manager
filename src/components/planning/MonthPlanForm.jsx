@@ -153,20 +153,24 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
                   {selectedGoals.some(
                     (goalPlan) => goalPlan.goalId === goal.id
                   ) && (
-                    <input
-                      type="number"
-                      min="0.25"
-                      step="0.25"
-                      placeholder="Stunden"
-                      value={
-                        selectedGoals.find(
-                          (goalPlan) => goalPlan.goalId === goal.id
-                        )?.plannedHours || ""
-                      }
-                      onChange={(event) =>
-                        handleGoalHoursChange(goal.id, event.target.value)
-                      }
-                    />
+                    <label className="goal-hours-input-group">
+                      <input
+                        type="number"
+                        min="0.25"
+                        step="0.25"
+                        placeholder="Stunden"
+                        value={
+                          selectedGoals.find(
+                            (goalPlan) => goalPlan.goalId === goal.id
+                          )?.plannedHours || ""
+                        }
+                        onChange={(event) =>
+                          handleGoalHoursChange(goal.id, event.target.value)
+                        }
+                      />
+
+                      <span>Stunden</span>
+                    </label>
                   )}
                 </div>
               ))

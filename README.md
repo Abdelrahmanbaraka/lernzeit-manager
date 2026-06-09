@@ -73,9 +73,11 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 - Lernziel bearbeiten
 - Lernziel löschen
 - Lernziel als erledigt markieren
+- Beschreibung ist optional
 - Aktive und erledigte Lernziele werden getrennt angezeigt
 - Erledigte Lernziele bleiben als Historie sichtbar, bis sie manuell gelöscht werden
 - Anzeige von Status-Emojis
+- Status `Überfällig` erscheint erst ab dem Tag nach dem Fälligkeitsdatum
 - Speicherung im localStorage
 
 ### Lernplan / Kalender
@@ -87,6 +89,7 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 - Tagesplanung kann direkt über den Button `Tagesplan erstellen` oder über das `+` im Kalender erstellt werden
 - Tagesplanungen können bearbeitet und gelöscht werden
 - Startzeit, Endzeit und Ziel pro Tagesplanung
+- Überschneidende Tagesplanungen am selben Datum werden blockiert
 - Navigation zwischen Monaten
 - Kalender zeigt echte Anzahl der Tage pro Monat
 - Tagesplanungen bleiben erhalten, auch wenn ein Ziel als erledigt markiert wird

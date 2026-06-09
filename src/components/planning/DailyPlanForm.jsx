@@ -6,9 +6,20 @@ import {
   isStartTimeInPast,
 } from "../../utils/dateUtils";
 
-import { getCurrentTime, getTodayDate } from "../../utils/timerUtils";
+import {
+  getCurrentTime,
+  getTodayDate,
+  hasOverlappingDailyPlan,
+} from "../../utils/timerUtils";
 
-function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
+function DailyPlanForm({
+  goals,
+  selectedDate,
+  existingPlan,
+  existingPlans = [],
+  onSave,
+  onClose,
+}) {
   const dateRange = getDailyPlanDateRange();
 
   const fixedDate = selectedDate || existingPlan?.date || "";
@@ -44,13 +55,7 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
       return;
     }
 
-    if (!existingPlan && (date < dateRange.min || date > dateRange.max)) {
-      alert("Tagesplanung ist nur für die nächsten 30 Tage möglich.");
-
-      return;
-    }
-
-    onSave({
+    const plan = {
       id: existingPlan?.id || Date.now(),
 
       date,
@@ -60,7 +65,21 @@ function DailyPlanForm({ goals, selectedDate, existingPlan, onSave, onClose }) {
       endTime,
 
       goal,
-    });
+    };
+
+    if (hasOverlappingDailyPlan(plan, existingPlans)) {
+      alert("Diese Zeit überschneidet sich mit einer bereits geplanten Lernsitzung.");
+
+      return;
+    }
+
+    if (!existingPlan && (date < dateRange.min || date > dateRange.max)) {
+      alert("Tagesplanung ist nur für die nächsten 30 Tage möglich.");
+
+      return;
+    }
+
+    onSave(plan);
 
     onClose();
   }
