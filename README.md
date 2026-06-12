@@ -73,7 +73,10 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 - Lernziel bearbeiten
 - Lernziel löschen
 - Lernziel als erledigt markieren
+- Lernzielnamen müssen eindeutig sein; Groß-/Kleinschreibung und Leerzeichen am Anfang oder Ende werden bei der Prüfung ignoriert
+- Für Teilziele sollten eindeutige Namen wie `Mathe – Lektion 1` verwendet werden
 - Beschreibung ist optional
+- Beschreibungen erklären den Kontext eines Lernziels und werden in der Fortschrittsansicht angezeigt
 - Aktive und erledigte Lernziele werden getrennt angezeigt
 - Erledigte Lernziele bleiben als Historie sichtbar, bis sie manuell gelöscht werden
 - Anzeige von Status-Emojis
@@ -83,9 +86,12 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 ### Lernplan / Kalender
 
 - Monatsplanung mit geplanter Lernzeit für den aktuellen Monat und die nächsten 5 Monate
+- Die Monatsplanung definiert die geplanten Stunden pro Lernziel
 - Monatsplanungen können bearbeitet und gelöscht werden
 - Auswahl mehrerer Ziele pro Monat
 - Tagesplanung im Kalender für heute bis maximal 30 Tage in die Zukunft
+- Tagesplanung verteilt die geplanten Monatsstunden auf konkrete Kalendereinträge
+- `Stunden noch zu verplanen` zeigt pro Lernziel, wie viele Monatsstunden noch nicht im Kalender verteilt sind
 - Tagesplanung kann direkt über den Button `Tagesplan erstellen` oder über das `+` im Kalender erstellt werden
 - Tagesplanungen können bearbeitet und gelöscht werden
 - Startzeit, Endzeit und Ziel pro Tagesplanung
@@ -104,13 +110,16 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 - Lernsession löschen
 - Speicherung mit Ziel, Datum, Startzeit, Endzeit und Dauer
 - Stoppuhr-Sessions speichern ebenfalls Start- und Endzeit
+- Überschneidende doppelte Lernzeiten für dasselbe Ziel werden nach Möglichkeit blockiert
+- Eine laufende Stoppuhr verhindert parallele Erfassung für dasselbe Ziel
 
 ### Fortschritt
 
 - Übersicht aktiver und erledigter Ziele
 - Einfacher Monatsvergleich von geplanten und tatsächlich gelernten Stunden
 - Fortschrittsbalken pro Lernziel
-- Anzeige von Fälligkeitsdatum, geplanten Stunden, gelernten Stunden, Fortschritt und Status
+- Anzeige von Beschreibung, Fälligkeitsdatum, geplanten Stunden, gelernten Stunden, Fortschritt und Status
+- Monatsstunden sind die Quelle für geplante Stunden; Tagesplanungen zählen nur als Fallback, wenn es für ein Ziel in einem Monat keinen Monatsplan gibt
 
 ### Profil
 
@@ -461,6 +470,7 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 ### Lernziele
 
 - Ziel erstellen
+- Prüfen, dass ein zweites Ziel mit gleichem Namen wie `Mathe`, ` mathe ` oder `MATHE` blockiert wird
 - Ziel bearbeiten
 - Ziel löschen
 - Ziel als erledigt markieren
@@ -473,6 +483,8 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 - Geplante Stunden eintragen
 - Ziele auswählen
 - Tagesplanung im Kalender oder über `Tagesplan erstellen` anlegen
+- Prüfen, ob `Stunden noch zu verplanen` die Monatsstunden minus Kalenderstunden anzeigt
+- Prüfen, dass Tagesplanungen in der Fortschrittsansicht nicht zusätzlich zu Monatsstunden doppelt gezählt werden
 - Prüfen, dass neue Tagesplanungen nur für die nächsten 30 Tage möglich sind
 - Tagesplanung bearbeiten und löschen
 - Zwischen Monaten wechseln
@@ -496,6 +508,7 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 - Aktive und erledigte Ziele prüfen
 - Fortschrittsbalken pro Lernziel prüfen
 - Status Offen, Erledigt und Überfällig prüfen
+- Beschreibung unter dem Lernzielnamen prüfen
 
 ### Benachrichtigungen
 
@@ -512,6 +525,8 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 
 ## 14. Wichtige Hinweise
 
+- Das Projekt befindet sich im finalen Sprint / Feature Freeze. Es werden nur kritische Fehlerbehebungen, kleine UI-Verbesserungen, Dokumentationsupdates und Deployment-Vorbereitung umgesetzt.
+- Neue Feature-Wünsche wie Backend, Accounts, Kategorien, Tags oder komplexe Benachrichtigungssysteme sind nicht Bestandteil dieses finalen Stands.
 - Das Login ist nur ein Mock-Login.
 - Es gibt keine echte Authentifizierung.
 - Es gibt kein Backend.

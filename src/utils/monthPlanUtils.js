@@ -29,42 +29,111 @@ export function getMonthPlanGoalEntries(plan, goals = []) {
 }
 
 export function getPlannedHoursForGoal(goal, monthPlans, dailyPlans = []) {
-  const monthlyHours = monthPlans.reduce((sum, plan) => {
-    const matchingGoalPlan = getMonthPlanGoalEntries(plan).find(
-      (goalPlan) =>
-        (goalPlan.goalId && goalPlan.goalId === goal.id) ||
-        goalPlan.title === goal.title
-    );
+  const monthKeys = new Set([
+    ...monthPlans.map((plan) => plan.month).filter(Boolean),
+    ...dailyPlans
+      .filter((plan) => plan.goal === goal.title && plan.date)
+      .map((plan) => plan.date.slice(0, 7)),
+  ]);
 
-    if (!matchingGoalPlan) {
-      return sum;
-    }
-
-    return sum + Number(matchingGoalPlan.plannedHours || 0);
-  }, 0);
-
-  if (monthlyHours > 0) {
-    return monthlyHours;
-  }
-
-  return getDetailedPlanHoursForGoal(goal, dailyPlans);
+  return Array.from(monthKeys).reduce(
+    (sum, monthKey) =>
+      sum + getPlannedHoursForGoalInMonth(goal, monthPlans, dailyPlans, monthKey),
+    0
+  );
 }
 
 export function getPlannedHoursForMonth(monthPlans, dailyPlans, monthKey) {
-  const monthlyHours = monthPlans
-    .filter((plan) => plan.month === monthKey)
-    .reduce((sum, plan) => sum + getMonthPlanTotalHours(plan), 0);
+  const monthPlansForMonth = monthPlans.filter((plan) => plan.month === monthKey);
 
-  const dailyHours = dailyPlans
+  const monthlyHours = monthPlansForMonth.reduce(
+    (sum, plan) => sum + getMonthPlanTotalHours(plan),
+    0
+  );
+
+  const monthlyGoalTitles = new Set(
+    monthPlansForMonth.flatMap((plan) =>
+      getMonthPlanGoalEntries(plan)
+        .map((goalPlan) => goalPlan.title)
+        .filter(Boolean)
+    )
+  );
+
+  const uncoveredDailyHours = dailyPlans
     .filter((plan) => plan.date?.startsWith(monthKey))
+    .filter((plan) => !monthlyGoalTitles.has(plan.goal))
     .reduce((sum, plan) => sum + getDailyPlanHours(plan), 0);
 
-  return monthlyHours + dailyHours;
+  return monthlyHours + uncoveredDailyHours;
 }
 
-function getDetailedPlanHoursForGoal(goal, dailyPlans) {
+export function getPlannedHoursForGoalInMonth(
+  goal,
+  monthPlans,
+  dailyPlans,
+  monthKey
+) {
+  const monthlyPlanHours = getMonthlyPlanHoursForGoal(goal, monthPlans, monthKey);
+
+  if (monthlyPlanHours.hasMonthlyPlan) {
+    return monthlyPlanHours.hours;
+  }
+
+  return getDetailedPlanHoursForGoalInMonth(goal, dailyPlans, monthKey);
+}
+
+export function getDistributedDailyHoursForGoalInMonth(
+  goalPlan,
+  dailyPlans,
+  monthKey
+) {
+  return getDetailedPlanHoursForGoalInMonth(goalPlan, dailyPlans, monthKey);
+}
+
+export function getRemainingHoursToPlanForGoal(goalPlan, dailyPlans, monthKey) {
+  const plannedHours = Number(goalPlan.plannedHours || 0);
+
+  const distributedHours = getDistributedDailyHoursForGoalInMonth(
+    goalPlan,
+    dailyPlans,
+    monthKey
+  );
+
+  return Math.max(plannedHours - distributedHours, 0);
+}
+
+function getMonthlyPlanHoursForGoal(goal, monthPlans, monthKey) {
+  return monthPlans
+    .filter((plan) => plan.month === monthKey)
+    .reduce(
+      (result, plan) => {
+        const matchingGoalPlan = getMonthPlanGoalEntries(plan).find(
+          (goalPlan) =>
+            (goalPlan.goalId && goalPlan.goalId === goal.id) ||
+            goalPlan.title === goal.title
+        );
+
+        if (!matchingGoalPlan) {
+          return result;
+        }
+
+        if (!hasGoalLevelPlannedHours(plan)) {
+          return result;
+        }
+
+        return {
+          hasMonthlyPlan: true,
+          hours: result.hours + Number(matchingGoalPlan.plannedHours || 0),
+        };
+      },
+      { hasMonthlyPlan: false, hours: 0 }
+    );
+}
+
+function getDetailedPlanHoursForGoalInMonth(goal, dailyPlans, monthKey) {
   return dailyPlans
     .filter((plan) => plan.goal === goal.title)
+    .filter((plan) => plan.date?.startsWith(monthKey))
     .reduce((sum, plan) => sum + getDailyPlanHours(plan), 0);
 }
 
@@ -92,4 +161,15 @@ function normalizeGoalPlanEntry(goalEntry, goals) {
     title: matchingGoal?.title || goalEntry.title || "",
     plannedHours: Number(goalEntry.plannedHours || 0),
   };
+}
+
+function hasGoalLevelPlannedHours(plan) {
+  return (
+    Array.isArray(plan.goals) &&
+    plan.goals.some(
+      (goalEntry) =>
+        typeof goalEntry === "object" &&
+        Object.prototype.hasOwnProperty.call(goalEntry, "plannedHours")
+    )
+  );
 }

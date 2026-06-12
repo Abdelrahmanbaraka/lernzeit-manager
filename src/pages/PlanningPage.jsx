@@ -28,6 +28,7 @@ import {
 import {
   getMonthPlanGoalEntries,
   getMonthPlanTotalHours,
+  getRemainingHoursToPlanForGoal,
 } from "../utils/monthPlanUtils";
 
 function PlanningPage() {
@@ -210,11 +211,27 @@ function PlanningPage() {
 
                   <ul>
                     {getMonthPlanGoalEntries(plan, goals).map(
-                      (goalPlan, index) => (
-                        <li key={goalPlan.goalId || goalPlan.title || index}>
-                          {goalPlan.title}: {Number(goalPlan.plannedHours || 0)} h
-                        </li>
-                      )
+                      (goalPlan, index) => {
+                        const remainingHours = getRemainingHoursToPlanForGoal(
+                          goalPlan,
+                          dailyPlans,
+                          plan.month
+                        );
+
+                        return (
+                          <li key={goalPlan.goalId || goalPlan.title || index}>
+                            <span>
+                              {goalPlan.title}:{" "}
+                              {Number(goalPlan.plannedHours || 0)} h
+                            </span>
+
+                            <span className="remaining-plan-counter">
+                              Stunden noch zu verplanen:{" "}
+                              {Number(remainingHours.toFixed(2))} h
+                            </span>
+                          </li>
+                        );
+                      }
                     )}
                   </ul>
 

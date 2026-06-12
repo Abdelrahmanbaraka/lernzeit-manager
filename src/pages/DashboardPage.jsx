@@ -12,11 +12,14 @@ import { getGoals } from "../services/goalService";
 
 import { getLearningSessions } from "../services/sessionService";
 
-import { getMonthPlans } from "../services/planningService";
+import {
+  getDailyPlans,
+  getMonthPlans,
+} from "../services/planningService";
 
 import { getTodayDate } from "../utils/timerUtils";
 
-import { getMonthPlanTotalHours } from "../utils/monthPlanUtils";
+import { getPlannedHoursForMonth } from "../utils/monthPlanUtils";
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -28,6 +31,8 @@ function DashboardPage() {
   const [sessions, setSessions] = useState(() => getLearningSessions());
 
   const [monthPlans] = useState(() => getMonthPlans());
+
+  const [dailyPlans] = useState(() => getDailyPlans());
 
   function handleSessionSaved(updatedSessions) {
     setSessions(updatedSessions);
@@ -45,9 +50,11 @@ function DashboardPage() {
 
   const completedGoals = goals.filter((goal) => goal.completed).length;
 
-  const plannedHours = monthPlans
-    .filter((plan) => plan.month === currentMonth)
-    .reduce((sum, plan) => sum + getMonthPlanTotalHours(plan), 0);
+  const plannedHours = getPlannedHoursForMonth(
+    monthPlans,
+    dailyPlans,
+    currentMonth
+  );
 
   const todayHours = Math.floor(todayLearningMinutes / 60);
 

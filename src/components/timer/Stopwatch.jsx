@@ -18,6 +18,7 @@ import {
   getCurrentTime,
   getTodayDate,
 } from "../../utils/timerUtils";
+import { hasOverlappingLearningSession } from "../../utils/sessionUtils";
 
 function Stopwatch({ onSessionSaved }) {
   const [goals] = useState(() => getGoals());
@@ -63,9 +64,21 @@ function Stopwatch({ onSessionSaved }) {
       return;
     }
 
-    setIsRunning(true);
-
     const activeStopwatch = getActiveStopwatch();
+
+    if (activeStopwatch?.isRunning) {
+      setSelectedGoal(activeStopwatch.goal || "");
+
+      setSeconds(getElapsedSeconds(activeStopwatch));
+
+      setIsRunning(true);
+
+      alert("Es läuft bereits eine Stoppuhr. Bitte stoppe oder pausiere sie zuerst.");
+
+      return;
+    }
+
+    setIsRunning(true);
 
     const stopwatchState = {
       goal: selectedGoal,
@@ -160,6 +173,30 @@ function Stopwatch({ onSessionSaved }) {
     };
 
     const existingSessions = getLearningSessions();
+
+    if (hasOverlappingLearningSession(newSession, existingSessions)) {
+      alert(
+        "Diese Lernsession überschneidet sich mit einer bereits gespeicherten Lernzeit für dasselbe Ziel."
+      );
+
+      saveActiveStopwatch({
+        ...activeStopwatch,
+
+        goal: selectedGoal,
+
+        startTimestamp: null,
+
+        accumulatedSeconds: totalSeconds,
+
+        isRunning: false,
+      });
+
+      setSeconds(totalSeconds);
+
+      setIsRunning(false);
+
+      return;
+    }
 
     const updatedSessions = [...existingSessions, newSession];
 

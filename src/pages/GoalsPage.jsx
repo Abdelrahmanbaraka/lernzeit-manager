@@ -182,6 +182,7 @@ function GoalsPage() {
             onSave={handleSaveGoal}
             onClose={handleCloseModal}
             existingGoal={editingGoal}
+            existingGoals={goals}
           />
         )}
       </div>

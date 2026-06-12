@@ -2,9 +2,20 @@ import { useState } from "react";
 
 import { getGoals } from "../../services/goalService";
 
-import { calculateMinutesBetween, getTodayDate } from "../../utils/timerUtils";
+import { getActiveStopwatch } from "../../services/stopwatchService";
 
-function ManualSessionForm({ onSave, onClose }) {
+import {
+  calculateMinutesBetween,
+  getCurrentTime,
+  getTodayDate,
+} from "../../utils/timerUtils";
+
+import {
+  hasOverlappingLearningSession,
+  isRunningStopwatchForSession,
+} from "../../utils/sessionUtils";
+
+function ManualSessionForm({ existingSessions = [], onSave, onClose }) {
   const [goals] = useState(() => getGoals());
 
   const [date, setDate] = useState(getTodayDate());
@@ -49,6 +60,24 @@ function ManualSessionForm({ onSave, onClose }) {
 
       emoji: "✍️",
     };
+
+    if (hasOverlappingLearningSession(session, existingSessions)) {
+      alert(
+        "Diese Lernsession überschneidet sich mit einer bereits gespeicherten Lernzeit für dasselbe Ziel."
+      );
+
+      return;
+    }
+
+    if (
+      isRunningStopwatchForSession(getActiveStopwatch(), session, getCurrentTime())
+    ) {
+      alert(
+        "Für dieses Ziel läuft bereits eine Stoppuhr. Bitte stoppe oder pausiere sie zuerst."
+      );
+
+      return;
+    }
 
     onSave(session);
 

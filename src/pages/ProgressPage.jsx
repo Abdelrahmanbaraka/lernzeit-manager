@@ -135,10 +135,16 @@ function ProgressPage() {
             ) : (
               <div className="goal-progress-list">
                 {detailedGoalProgress.map((goal) => (
-                  <div key={goal.name} className="goal-progress-card">
+                  <div key={goal.id} className="goal-progress-card">
                     <div className="goal-progress-header">
                       <div>
                         <h3>{goal.name}</h3>
+
+                        {goal.description && (
+                          <p className="goal-progress-description">
+                            {goal.description}
+                          </p>
+                        )}
 
                         <small>Fällig: {formatDisplayDate(goal.dueDate)}</small>
                       </div>
@@ -188,7 +194,11 @@ function getDetailedGoalProgress(goals, sessions, monthPlans, dailyPlans) {
       plannedHours > 0 ? Math.min((learnedHours / plannedHours) * 100, 100) : 0;
 
     return {
+      id: goal.id,
+
       name: goal.title,
+
+      description: goal.description,
 
       dueDate: goal.dueDate,
 

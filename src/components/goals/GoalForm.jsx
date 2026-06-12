@@ -1,9 +1,12 @@
 import { useState } from "react";
 
+import { hasDuplicateGoalTitle } from "../../utils/validationUtils";
+
 function GoalForm({
   onSave,
   onClose,
   existingGoal,
+  existingGoals = [],
 }) {
   const [title, setTitle] = useState(
     existingGoal?.title || ""
@@ -20,8 +23,20 @@ function GoalForm({
   function handleSubmit(event) {
     event.preventDefault();
 
-    if (!title || !dueDate) {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle || !dueDate) {
       alert("Bitte alle Felder ausfüllen.");
+
+      return;
+    }
+
+    if (
+      hasDuplicateGoalTitle(trimmedTitle, existingGoals, existingGoal?.id || null)
+    ) {
+      alert(
+        "Dieser Zielname wird bereits verwendet. Bitte wähle einen eindeutigen Namen."
+      );
 
       return;
     }
@@ -29,7 +44,7 @@ function GoalForm({
     onSave({
       id: existingGoal?.id || Date.now(),
 
-      title,
+      title: trimmedTitle,
 
       description: description.trim(),
 

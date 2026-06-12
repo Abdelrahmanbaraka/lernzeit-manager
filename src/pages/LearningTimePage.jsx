@@ -53,6 +53,7 @@ function LearningTimePage() {
 
         {showManualForm && (
           <ManualSessionForm
+            existingSessions={sessions}
             onSave={handleSaveSession}
             onClose={() => setShowManualForm(false)}
           />
