@@ -583,6 +583,4 @@ test-results-final-sprint.xlsx
 
 ---
 
-
-
 **Projekt:** Lernzeit-Manager
