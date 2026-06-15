@@ -23,7 +23,8 @@ Alle Daten werden lokal im Browser über `localStorage` gespeichert.
 11. Build
 12. Deployment mit Netlify
 13. Hinweise für Tests
-14. Wichtige Hinweise
+14. Änderungsliste
+15. Wichtige Hinweise
 
 ---
 
@@ -60,7 +61,6 @@ Die Anwendung wurde mit React und Vite entwickelt und läuft vollständig im Bro
 
 - Übersicht über heutige Lernzeit
 - Anzeige aktiver Ziele
-- Anzeige geplanter Stunden für den aktuellen Monat
 - Anzeige erledigter Ziele
 - Stoppuhr zur direkten Erfassung von Lernzeiten
 - Stoppuhr läuft bei Navigation innerhalb der App weiter
@@ -461,6 +461,42 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 
 ## 13. Hinweise für Tests
 
+Für den finalen Sprint wurde ein strukturiertes Testkonzept ergänzt. Es enthält automatisierte Quellcode-Prüfungen, Unit-/Logiktests, Component-Tests, Integrationstests und Regressionstests für zentrale Funktionen. Die Ergebnisse werden zusätzlich in einem CSV- und XLSX-Testprotokoll dokumentiert.
+
+Testkategorien:
+
+- Automatisierte Quellcode-Prüfungen: statische Prüfungen von Quelltexten, keine Component-Tests
+- Unit-/Logiktests: direkte Tests von Helper- und Utility-Funktionen
+- Component-Tests: echte React-Komponenten-Tests mit Vitest, React Testing Library und jsdom
+- Integrationstests: Zusammenspiel mehrerer Logikbereiche, z. B. Monatsplanung, Tagesplanung und Fortschritt
+- Regressionstests: Absicherung wichtiger finaler Sprint-Änderungen und bestehender Kernfunktionen
+- Manuelle UI-/E2E-Tests: manuell in der Anwendung geprüfte Nutzerflüsse
+- Manuelle Responsive-Tests: manuell über Chrome DevTools geprüfte Layouts
+
+Die UI-/E2E-Prüfungen wurden manuell durchgeführt. Eine automatisierte Browser-Testumgebung wie Playwright oder Puppeteer ist aktuell nicht Bestandteil des Projekts.
+
+Die Responsive-Prüfung wurde manuell über Chrome DevTools durchgeführt.
+
+Ausführen:
+
+```bash
+npm test
+```
+
+Einzelne Testteile:
+
+```bash
+npm run test:checks
+npm run test:components
+```
+
+CSV-Testprotokoll:
+
+```text
+test-results-final-sprint.csv
+test-results-final-sprint.xlsx
+```
+
 ### Login
 
 - Login mit `student / 1234`
@@ -482,6 +518,7 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 - Monatsplan bearbeiten und löschen
 - Geplante Stunden eintragen
 - Ziele auswählen
+- Prüfen, dass mehr als 10 Ziele in einem Monatsplan ausgewählt werden können
 - Tagesplanung im Kalender oder über `Tagesplan erstellen` anlegen
 - Prüfen, ob `Stunden noch zu verplanen` die Monatsstunden minus Kalenderstunden anzeigt
 - Prüfen, dass Tagesplanungen in der Fortschrittsansicht nicht zusätzlich zu Monatsstunden doppelt gezählt werden
@@ -523,7 +560,15 @@ Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
 
 ---
 
-## 14. Wichtige Hinweise
+## 14. Änderungsliste
+
+- 10-Ziele-Limit aus Anforderungen entfernt.
+- Dashboard-Counter `Geplante Stunden` entfernt.
+- Login-Daten werden auf der Startseite nicht mehr angezeigt.
+
+---
+
+## 15. Wichtige Hinweise
 
 - Das Projekt befindet sich im finalen Sprint / Feature Freeze. Es werden nur kritische Fehlerbehebungen, kleine UI-Verbesserungen, Dokumentationsupdates und Deployment-Vorbereitung umgesetzt.
 - Neue Feature-Wünsche wie Backend, Accounts, Kategorien, Tags oder komplexe Benachrichtigungssysteme sind nicht Bestandteil dieses finalen Stands.

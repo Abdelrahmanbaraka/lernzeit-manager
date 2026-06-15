@@ -1,4 +1,4 @@
-import { doTimeRangesOverlap } from "./timerUtils";
+import { doTimeRangesOverlap } from "./timerUtils.js";
 
 export function hasOverlappingLearningSession(newSession, sessions) {
   if (

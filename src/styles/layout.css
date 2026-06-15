@@ -715,20 +715,6 @@ button {
   text-align: center;
 }
 
-.demo-users {
-  margin-top: 1.5rem;
-
-  background-color: #f1f5f9;
-
-  padding: 1rem;
-
-  border-radius: 10px;
-}
-
-.demo-users h4 {
-  margin-bottom: 0.5rem;
-}
-
 .profile-card {
   background-color: white;
 

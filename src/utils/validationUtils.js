@@ -17,3 +17,23 @@ export function hasDuplicateGoalTitle(title, goals, currentGoalId = null) {
     return normalizeGoalTitle(goal.title || "") === normalizedTitle;
   });
 }
+
+export function getTodayDateString() {
+  const today = new Date();
+
+  const year = today.getFullYear();
+
+  const month = String(today.getMonth() + 1).padStart(2, "0");
+
+  const day = String(today.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+export function isDateInPast(dateValue, todayValue = getTodayDateString()) {
+  if (!dateValue) {
+    return false;
+  }
+
+  return dateValue < todayValue;
+}

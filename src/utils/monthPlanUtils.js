@@ -1,4 +1,4 @@
-import { calculateMinutesBetween } from "./timerUtils";
+import { calculateMinutesBetween } from "./timerUtils.js";
 
 export function getMonthPlanTotalHours(plan) {
   const goalPlans = getMonthPlanGoalEntries(plan);

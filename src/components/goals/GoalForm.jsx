@@ -1,6 +1,10 @@
 import { useState } from "react";
 
-import { hasDuplicateGoalTitle } from "../../utils/validationUtils";
+import {
+  getTodayDateString,
+  hasDuplicateGoalTitle,
+  isDateInPast,
+} from "../../utils/validationUtils";
 
 function GoalForm({
   onSave,
@@ -20,6 +24,8 @@ function GoalForm({
     existingGoal?.dueDate || ""
   );
 
+  const todayDate = getTodayDateString();
+
   function handleSubmit(event) {
     event.preventDefault();
 
@@ -37,6 +43,15 @@ function GoalForm({
       alert(
         "Dieser Zielname wird bereits verwendet. Bitte wähle einen eindeutigen Namen."
       );
+
+      return;
+    }
+
+    const dueDateWasChanged =
+      !existingGoal || dueDate !== existingGoal.dueDate;
+
+    if (dueDateWasChanged && isDateInPast(dueDate, todayDate)) {
+      alert("Das Fälligkeitsdatum darf nicht in der Vergangenheit liegen.");
 
       return;
     }
@@ -66,7 +81,7 @@ function GoalForm({
             : "Neues Ziel"}
         </h2>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} noValidate>
           <input
             type="text"
             placeholder="Name"
@@ -89,6 +104,7 @@ function GoalForm({
 
             <input
               type="date"
+              min={todayDate}
               value={dueDate}
               onChange={(e) =>
                 setDueDate(e.target.value)

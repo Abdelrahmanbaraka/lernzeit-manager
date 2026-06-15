@@ -12,14 +12,7 @@ import { getGoals } from "../services/goalService";
 
 import { getLearningSessions } from "../services/sessionService";
 
-import {
-  getDailyPlans,
-  getMonthPlans,
-} from "../services/planningService";
-
 import { getTodayDate } from "../utils/timerUtils";
-
-import { getPlannedHoursForMonth } from "../utils/monthPlanUtils";
 
 function DashboardPage() {
   const navigate = useNavigate();
@@ -30,17 +23,11 @@ function DashboardPage() {
 
   const [sessions, setSessions] = useState(() => getLearningSessions());
 
-  const [monthPlans] = useState(() => getMonthPlans());
-
-  const [dailyPlans] = useState(() => getDailyPlans());
-
   function handleSessionSaved(updatedSessions) {
     setSessions(updatedSessions);
   }
 
   const today = getTodayDate();
-
-  const currentMonth = today.slice(0, 7);
 
   const todayLearningMinutes = sessions
     .filter((session) => session.date === today)
@@ -49,12 +36,6 @@ function DashboardPage() {
   const activeGoals = goals.filter((goal) => !goal.completed).length;
 
   const completedGoals = goals.filter((goal) => goal.completed).length;
-
-  const plannedHours = getPlannedHoursForMonth(
-    monthPlans,
-    dailyPlans,
-    currentMonth
-  );
 
   const todayHours = Math.floor(todayLearningMinutes / 60);
 
@@ -85,12 +66,6 @@ function DashboardPage() {
             <h3>Aktive Ziele</h3>
 
             <p className="card-value">{activeGoals}</p>
-          </div>
-
-          <div className="dashboard-card">
-            <h3>Geplante Stunden</h3>
-
-            <p className="card-value">{plannedHours} h</p>
           </div>
 
           <div className="dashboard-card">

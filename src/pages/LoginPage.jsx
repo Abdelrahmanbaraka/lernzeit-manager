@@ -77,18 +77,6 @@ function LoginPage() {
           </p>
         )}
 
-        <div className="demo-users">
-          <h4>Test Accounts</h4>
-
-          <p>
-            student / 1234
-          </p>
-
-          <p>
-            tutor / 1234
-          </p>
-        </div>
-
         <small>
           Hinweis: Alle Daten werden lokal
           im Browser gespeichert.

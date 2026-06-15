@@ -37,12 +37,6 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
       return;
     }
 
-    if (selectedGoals.length >= 10) {
-      alert("Maximal 10 Ziele.");
-
-      return;
-    }
-
     setSelectedGoals([
       ...selectedGoals,
       {
