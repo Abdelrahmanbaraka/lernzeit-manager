@@ -432,32 +432,7 @@ npm run preview
 
 ---
 
-## 12. Deployment mit Netlify
 
-Die Anwendung kann über Netlify bereitgestellt werden.
-
-### Vorgehen
-
-1. Netlify öffnen
-2. Mit GitHub verbinden
-3. Repository `lernzeit-manager` auswählen
-4. Build Command setzen:
-
-```bash
-npm run build
-```
-
-5. Publish Directory setzen:
-
-```text
-dist
-```
-
-6. Deployment starten
-
-Nach erfolgreichem Deployment stellt Netlify eine URL bereit.
-
----
 
 ## 13. Hinweise für Tests
 
