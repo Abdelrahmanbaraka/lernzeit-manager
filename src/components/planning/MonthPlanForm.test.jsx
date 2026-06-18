@@ -4,6 +4,36 @@ import { describe, expect, it, vi } from "vitest";
 import MonthPlanForm from "./MonthPlanForm";
 
 describe("MonthPlanForm", () => {
+  it("speichert weniger als 10 Ziele unverändert", () => {
+    const goals = Array.from({ length: 3 }, (_, index) => ({
+      id: `goal-${index + 1}`,
+      title: `Ziel ${index + 1}`,
+    }));
+    const onSave = vi.fn();
+
+    render(
+      <MonthPlanForm
+        goals={goals}
+        currentMonth={new Date("2026-06-15")}
+        onSave={onSave}
+        onClose={vi.fn()}
+      />
+    );
+
+    fireEvent.click(screen.getByLabelText("Ziel 1"));
+    fireEvent.change(screen.getByPlaceholderText("Stunden"), {
+      target: { value: "2" },
+    });
+    fireEvent.click(screen.getByRole("button", { name: "Speichern" }));
+
+    expect(onSave).toHaveBeenCalledWith(
+      expect.objectContaining({
+        goals: [expect.objectContaining({ title: "Ziel 1", plannedHours: 2 })],
+        hours: 2,
+      })
+    );
+  });
+
   it("speichert mehr als 10 Ziele in einem Monatsplan", () => {
     const goals = Array.from({ length: 11 }, (_, index) => ({
       id: `goal-${index + 1}`,

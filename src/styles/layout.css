@@ -486,6 +486,22 @@ button {
   gap: 1rem;
 }
 
+.month-plan-modal {
+  max-height: min(90vh, 760px);
+
+  display: flex;
+
+  flex-direction: column;
+
+  overflow: hidden;
+}
+
+.month-plan-form {
+  flex: 1 1 auto;
+
+  min-height: 0;
+}
+
 .form-field {
   display: flex;
 
@@ -561,6 +577,12 @@ button {
 
   box-shadow: 0 2px 8px
     rgba(0, 0, 0, 0.05);
+
+  display: flex;
+
+  flex-direction: column;
+
+  min-width: 0;
 }
 
 .calendar-day-top {
@@ -568,7 +590,11 @@ button {
 
   justify-content: space-between;
 
+  align-items: center;
+
   margin-bottom: 1rem;
+
+  flex: 0 0 auto;
 }
 
 .calendar-day-top button {
@@ -598,9 +624,21 @@ button {
 
   border-radius: 8px;
 
-  margin-bottom: 0.5rem;
-
   min-width: 0;
+}
+
+.calendar-plans {
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 0.5rem;
+
+  max-height: 260px;
+
+  overflow-y: auto;
+
+  padding-right: 0.25rem;
 }
 
 .month-plan-section {
@@ -672,6 +710,20 @@ button {
   flex-direction: column;
 
   gap: 0.5rem;
+}
+
+.month-plan-form .goal-selection {
+  flex: 1 1 auto;
+
+  min-height: 0;
+
+  overflow-y: auto;
+
+  padding-right: 0.25rem;
+}
+
+.month-plan-form .modal-actions {
+  flex: 0 0 auto;
 }
 
 .checkbox-row {
@@ -946,18 +998,51 @@ button {
 
 .calendar-plan-item {
   display: flex;
+
+  flex-wrap: wrap;
+
   justify-content: space-between;
+
   align-items: flex-start;
+
   gap: 0.5rem;
+}
+
+.calendar-plan-content {
+  flex: 1 1 120px;
+
+  min-width: 0;
+}
+
+.calendar-plan-content small,
+.calendar-plan-content p {
+  display: block;
+
+  max-width: 100%;
+
+  overflow-wrap: anywhere;
+}
+
+.calendar-plan-content small {
+  color: #475569;
+}
+
+.calendar-plan-content p {
+  margin-top: 0.2rem;
 }
 
 .calendar-plan-delete {
   border: none;
+
   background-color: var(--danger-color);
+
   color: white;
 
   width: 22px;
+
   height: 22px;
+
+  flex: 0 0 22px;
 
   border-radius: 50%;
 
@@ -967,19 +1052,34 @@ button {
 
 .calendar-plan-actions {
   display: flex;
+
   align-items: center;
+
   gap: 0.4rem;
+
   flex-wrap: wrap;
+
   justify-content: flex-end;
+
+  flex: 0 0 auto;
+
+  max-width: 100%;
 }
 
 .calendar-plan-edit {
   border: none;
+
   background-color: #e2e8f0;
+
   color: #0f172a;
+
   padding: 0.35rem 0.5rem;
+
   border-radius: 8px;
+
   font-size: 0.8rem;
+
+  white-space: nowrap;
 }
 
 .goals-section {

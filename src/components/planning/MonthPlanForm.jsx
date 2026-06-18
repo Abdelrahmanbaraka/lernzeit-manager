@@ -109,10 +109,10 @@ function MonthPlanForm({ goals, currentMonth, existingPlan, onSave, onClose }) {
 
   return (
     <div className="modal-overlay">
-      <div className="goal-modal">
+      <div className="goal-modal month-plan-modal">
         <h2>{existingPlan ? "Monatsplan bearbeiten" : "Monat planen"}</h2>
 
-        <form onSubmit={handleSubmit}>
+        <form className="month-plan-form" onSubmit={handleSubmit}>
           <select
             value={month}
             onChange={(event) => setMonth(event.target.value)}

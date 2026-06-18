@@ -45,7 +45,7 @@ function CalendarGrid({
             <div className="calendar-plans">
               {currentPlans.map((plan) => (
                 <div key={plan.id} className="calendar-plan-item">
-                  <div>
+                  <div className="calendar-plan-content">
                     <small>
                       {plan.startTime} - {plan.endTime}
                     </small>
