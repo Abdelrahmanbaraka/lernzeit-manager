@@ -27,7 +27,7 @@ const files = {
   readme: await readFile("README.md", "utf8"),
 };
 
-// Automatisierte Quellcode-Prüfungen
+
 assert.equal(
   files.login.includes("student / 1234") || files.login.includes("tutor / 1234"),
   false,
@@ -193,11 +193,3 @@ assert.equal(files.goalForm.includes("hasDuplicateGoalTitle"), true);
 assert.equal(files.monthPlanForm.includes("getMonthPlanTotalHours"), true);
 assert.equal(files.readme.includes("Änderungsliste"), true);
 
-console.log("Final-Sprint-Prüfungen bestanden.");
-console.log("- Automatisierte Quellcode-Prüfungen: bestanden");
-console.log("- Unit-/Logiktests: bestanden");
-console.log("- Integrationstests: bestanden");
-console.log("- Regressionstests: bestanden");
-console.log("- Component-Tests: werden im Vitest-Lauf ausgeführt");
-console.log("- Manuelle UI-/E2E-Tests: siehe Testprotokoll");
-console.log("- Manuelle Responsive-Tests: siehe Testprotokoll");
