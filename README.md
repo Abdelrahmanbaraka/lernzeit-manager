@@ -270,21 +270,7 @@ Diese URL wird im Browser geöffnet.
 Die Anwendung nutzt Mock-Login-Daten.  
 Die Accounts dienen nur zu Test- und Demonstrationszwecken.
 
-### Student Account
 
-| Feld | Wert |
-|---|---|
-| Benutzername | `student` |
-| Passwort | `1234` |
-
-### Tutor / Admin Account
-
-| Feld | Wert |
-|---|---|
-| Benutzername | `tutor` |
-| Passwort | `1234` |
-
----
 
 ## 8. Projektstruktur
 
